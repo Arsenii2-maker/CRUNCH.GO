@@ -18,6 +18,11 @@
     <style>
         .scrollbar-none::-webkit-scrollbar { display: none; }
         .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes receiptIn {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-receipt { animation: receiptIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans selection:bg-orange-500 selection:text-white">
@@ -27,71 +32,64 @@
     <script type="text/babel">
         const { useState } = React;
 
-        // БАЗА ДАННЫХ ТОВАРОВ CRUNCH.GO (50 ПОЗИЦИЙ)
+        // РАСШИРЕННАЯ БАЗА ДАННЫХ ТОВАРОВ CRUNCH.GO С ИСПРАВЛЕННЫМИ ССЫЛКАМИ НА ФОТО
         const PRODUCTS = [
-            // --- БУРГЕРЫ (1-7) ---
-            { id: 1, name: 'Бургер Шеф-Монстр', price: 450, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80', desc: 'Двойная мраморная говядина, плавленый чеддер, маринованный лук и фирменный BBQ-соус.' },
-            { id: 2, name: 'Чикен Крисп Бургер', price: 340, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=600&q=80', desc: 'Хрустящее куриное филе в панировке, салат Айсберг и нежный майонезно-чесночный соус.' },
-            { id: 3, name: 'BBQ Бекон Бургер', price: 490, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=600&q=80', desc: 'Котлета на гриле, хрустящий бекон, карамелизованный лук и подкопченный соус.' },
-            { id: 4, name: 'Трюфельный Бургер', price: 520, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=600&q=80', desc: 'Мраморная говядина, сыр дорблю, руккола и изысканный соус на основе черного трюфеля.' },
-            { id: 5, name: 'Острый Халапеньо', price: 390, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80', desc: 'Котлета из говядины, острый перец халапеньо, сыр чеддер и жгучий соус чили.' },
-            { id: 6, name: 'Сырный Бро', price: 410, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=600&q=80', desc: 'Суперсырный бургер с моцареллой в панировке, чеддером и сливочно-сырным соусом.' },
-            { id: 7, name: 'Вегги Авокадо', price: 380, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1525059696034-4967a8e1dca2?auto=format&fit=crop&w=600&q=80', desc: 'Растительная котлета, ломтики спелого авокадо, томаты, шпинат и йогуртовый соус.' },
+            // --- БУРГЕРЫ ---
+            { id: 1, name: 'Бургер Шеф-Монстр', price: 450, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80', desc: 'Двойная мраморная говядина, плавленый чеддер, маринованный лук и фирменный BBQ-соус.', ccal: '840 ккал', customizable: true },
+            { id: 2, name: 'Чикен Крисп Бургер', price: 340, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=600&q=80', desc: 'Хрустящее куриное филе в панировке, салат Айсберг и нежный майонезно-чесночный соус.', ccal: '610 ккал', customizable: true },
+            { id: 3, name: 'BBQ Бекон Бургер', price: 490, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=600&q=80', desc: 'Котлета на гриле, хрустящий бекон, карамелизованный лук и подкопченный соус.', ccal: '790 ккал', customizable: true },
+            { id: 4, name: 'Трюфельный Бургер', price: 520, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=600&q=80', desc: 'Мраморная говядина, сыр дорблю, руккола и изысканный соус на основе черного трюфеля.', ccal: '720 ккал', customizable: true },
+            { id: 5, name: 'Острый Халапеньо', price: 390, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80', desc: 'Котлета из говядины, острый перец халапеньо, сыр чеддер и жгучий соус чили.', ccal: '680 ккал', customizable: true },
+            { id: 6, name: 'Сырный Бро', price: 410, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=600&q=80', desc: 'Суперсырный бургер с моцареллой в панировке, чеддером и сливочно-сырным соусом.', ccal: '890 ккал', customizable: true },
+            { id: 7, name: 'Вегги Авокадо', price: 380, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1525059696034-4967a8e1dca2?auto=format&fit=crop&w=600&q=80', desc: 'Растительная котлета, ломтики спелого авокадо, томаты, шпинат и йогуртовый соус.', ccal: '520 ккал', customizable: true },
 
-            // --- ПИЦЦА (8-14) ---
-            { id: 8, name: 'Пицца Пепперони', price: 620, category: 'Пицца', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80', desc: 'Пикантная колбаска пепперони, много моцареллы, томатный соус, italian травы.' },
-            { id: 9, name: 'Пицца Четыре Сыра', price: 690, category: 'Пицца', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80', desc: 'Изысканное сочетание дорблю, пармезана, чеддера и нежной моцареллы со сливочным соусом.' },
-            { id: 10, name: 'Пицца Сливочная цыпочка', price: 580, category: 'Пицца', image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80', desc: 'Нежное куриное филе, томаты черри, моцарелла и чесночный соус альфредо.' },
-            { id: 11, name: 'Пицца Маргарита', price: 490, category: 'Пицца', image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=600&q=80', desc: 'Классика с сочными томатами, увеличенной порцией моцареллы и соусом песто.' },
-            { id: 12, name: 'Пицца Мясной Пир', price: 750, category: 'Пицца', image: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=600&q=80', desc: 'Ветчина, бекон, баварские колбаски, пепперони, говяжий фарш и соус барбекю.' },
-            { id: 13, name: 'Пицца С грибами и трюфелем', price: 660, category: 'Пицца', image: 'https://images.unsplash.com/photo-1604917869287-3ae73c77e227?auto=format&fit=crop&w=600&q=80', desc: 'Шампиньоны, вешенки, моцарелла, белые грибы и капля ароматного трюфельного масла.' },
-            { id: 14, name: 'Пицца Барбекю с ананасом', price: 590, category: 'Пицца', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80', desc: 'Куриная грудка, сочные ананасы, моцарелла, томатный соус и сладковатый BBQ.' },
+            // --- ПИЦЦА ---
+            { id: 8, name: 'Пицца Пепперони', price: 620, category: 'Пицца', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80', desc: 'Пикантная колбаска пепперони, много моцареллы, томатный соус, итальянские травы.', ccal: '1100 ккал', customizable: true },
+            { id: 9, name: 'Пицца Четыре Сыра', price: 690, category: 'Пицца', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80', desc: 'Изысканное сочетание дорблю, пармезана, чеддера и нежной моцареллы со сливочным соусом.', ccal: '1250 ккал', customizable: true },
+            { id: 10, name: 'Пицца Сливочная цыпочка', price: 580, category: 'Пицца', image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80', desc: 'Нежное куриное филе, томаты черри, моцарелла и чесночный соус альфредо.', ccal: '1050 ккал', customizable: true },
+            { id: 11, name: 'Пицца Маргарита', price: 490, category: 'Пицца', image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=600&q=80', desc: 'Классика с сочными томатами, увеличенной порцией моцареллы и соусом песто.', ccal: '940 ккал', customizable: true },
+            { id: 12, name: 'Пицца Мясной Пир', price: 750, category: 'Пицца', image: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=600&q=80', desc: 'Ветчина, бекон, баварские колбаски, пепперони, говяжий фарш и соус барбекю.', ccal: '1400 ккал', customizable: true },
 
-            // --- СУШИ И РОЛЛЫ (15-21) ---
-            { id: 15, name: 'Ролл Филадельфия Люкс', price: 550, category: 'Суши', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80', desc: 'Много свежего лосося, толстый слой творожного сыра, авокадо и огурец.' },
-            { id: 16, name: 'Запеченный ролл с креветкой', price: 480, category: 'Суши', image: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80', desc: 'Тигровая креветка, сливочный сыр, под нежной острой шапочкой из спайси-соуса.' },
-            { id: 17, name: 'Калифорния в кунжуте', price: 420, category: 'Суши', image: 'https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80', desc: 'Снежный краб, майонез, авокадо, огурец, обсыпанные обжаренным кунжутом.' },
-            { id: 18, name: 'Острый тунец спайси', price: 490, category: 'Суши', image: 'https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?auto=format&fit=crop&w=600&q=80', desc: 'Филе тунца Блюфин, зеленый лук, огурец и жгучий японский соус.' },
-            { id: 19, name: 'Темпура ролл с угрем', price: 530, category: 'Суши', image: 'https://images.unsplash.com/photo-1583623025817-d180a2221d0a?auto=format&fit=crop&w=600&q=80', desc: 'Копченый угорь, авокадо, унаги соус, обжаренный в хрустящей панировке темпура.' },
-            { id: 20, name: 'Маки с авокадо', price: 210, category: 'Суши', image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80', desc: 'Простой и легкий ролл со спелым авокадо и рисом в листах нори.' },
-            { id: 21, name: 'Дракон ролл', price: 590, category: 'Суши', image: 'https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?auto=format&fit=crop&w=600&q=80', desc: 'Ролл с сыром и креветкой внутри, укрытый слайсами угря и авокадо сверху.' },
+            // --- СУШИ И РОЛЛЫ ---
+            { id: 15, name: 'Ролл Филадельфия Люкс', price: 550, category: 'Суши', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80', desc: 'Много свежего лосося, толстый слой творожного сыра, авокадо и огурец.', ccal: '380 ккал', customizable: true },
+            { id: 16, name: 'Запеченный ролл с креветкой', price: 480, category: 'Суши', image: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80', desc: 'Тигровая креветка, сливочный сыр, под нежной острой шапочкой из спайси-соуса.', ccal: '420 ккал', customizable: true },
+            { id: 17, name: 'Калифорния в кунжуте', price: 420, category: 'Суши', image: 'https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80', desc: 'Снежный краб, майонез, авокадо, огурец, обсыпанные обжаренным кунжутом.', ccal: '340 ккал', customizable: true },
+            { id: 19, name: 'Темпура ролл с угрем', price: 530, category: 'Суши', image: 'https://images.unsplash.com/photo-1583623025817-d180a2221d0a?auto=format&fit=crop&w=600&q=80', desc: 'Копченый угорь, авокадо, унаги соус, обжаренный в хрустящей панировке темпура.', ccal: '490 ккал', customizable: true },
+            { id: 20, name: 'Маки с авокадо', price: 210, category: 'Суши', image: 'https://images.unsplash.com/photo-1542234998-9577a1f49c67?auto=format&fit=crop&w=600&q=80', desc: 'Простой и легкий классический вегетарианский ролл со спелым авокадо, рисом и нори.', ccal: '180 ккал', customizable: false },
 
-            // --- ЗАКУСКИ (22-27) ---
-            { id: 22, name: 'Картофель фри XL', price: 180, category: 'Закуски', image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80', desc: 'Золотистый, хрустящий картофель с крупной морской солью.' },
-            { id: 23, name: 'Куриные наггетсы (9 шт)', price: 195, category: 'Закуски', image: 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=80', desc: 'Нежное куриное филе в хрустящей оригинальной панировке.' },
-            { id: 24, name: 'Сырные палочки моцарелла', price: 240, category: 'Закуски', image: 'https://images.unsplash.com/photo-1531749668029-2db88e4b76ce?auto=format&fit=crop&w=600&q=80', desc: 'Тягучий сыр моцарелла в сухарях. Подаются горячими.' },
-            { id: 25, name: 'Луковые кольца', price: 160, category: 'Закуски', image: 'https://images.unsplash.com/photo-1639024471283-2bc7b3c6a267?auto=format&fit=crop&w=600&q=80', desc: 'Кольца репчатого лука в кляре, обжаренные во фритюре.' },
-            { id: 26, name: 'Куриные крылья BBQ', price: 290, category: 'Закуски', image: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?auto=format&fit=crop&w=600&q=80', desc: 'Сочные крылышки в пикантном глазированном соусе барбекю.' },
-            { id: 27, name: 'Креветки торпедо в кляре', price: 380, category: 'Закуски', image: 'https://images.unsplash.com/photo-1559742811-824289511f48?auto=format&fit=crop&w=600&q=80', desc: 'Крупные тигровые креветки в воздушной панировке панко.' },
+            // --- СУПЫ (НОВАЯ КАТЕГОРИЯ) ---
+            { id: 60, name: 'Том Ям с креветками', price: 490, category: 'Супы', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80', desc: 'Острый тайский суп на кокосовом молоке с тигровыми креветками, грибами цаогу, лемонграссом и кинзой. Подается с рисом.', ccal: '410 ккал', customizable: true },
+            { id: 61, name: 'Рамен с курицей тясю', price: 430, category: 'Супы', image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80', desc: 'Наваристый пшеничный суп с маринованной курочкой, бамбуком, яйцом адзитама и водорослями нори.', ccal: '580 ккал', customizable: true },
+            { id: 62, name: 'Сливочный суп с лососем', price: 460, category: 'Супы', image: 'https://images.unsplash.com/photo-1547592165-e1d17fed6005?auto=format&fit=crop&w=600&q=80', desc: 'Нежный сливочный бульон, филе слабосоленого лосося, молодой картофель и лук-порей.', ccal: '390 ккал', customizable: false },
 
-            // --- ПРОДУКТЫ / МАРКЕТ (28-35) ---
-            { id: 28, name: 'Молоко отборное 3.2%', price: 95, category: 'Продукты', image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80', desc: 'Натуральное фермерское молоко пастеризованное, 930 мл.' },
-            { id: 29, name: 'Спелое Авокадо Хасс', price: 180, category: 'Продукты', image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80', desc: 'Идеально мягкое авокадо для ваших завтраков и салатов, 1 шт.' },
-            { id: 30, name: 'Яйца С0 куриные', price: 130, category: 'Продукты', image: 'https://images.unsplash.com/photo-1516448620398-c5f44bf9f441?auto=format&fit=crop&w=600&q=80', desc: 'Крупные фермерские яйца категории С0, 10 штук.' },
-            { id: 31, name: 'Сливки 20% Клевер', price: 145, category: 'Продукты', image: 'https://images.unsplash.com/photo-1528750994873-39400f34ea3e?auto=format&fit=crop&w=600&q=80', desc: 'Питьевые стерилизованные сливки для добавления в кофе или соусы.' },
-            { id: 32, name: 'Сыр Творожный Hochland', price: 190, category: 'Продукты', image: 'https://images.unsplash.com/photo-1528750994873-39400f34ea3e?auto=format&fit=crop&w=600&q=80', desc: 'Нежный творожный сыр без добавок, отлично для бутербродов.' },
-            { id: 33, name: 'Спагетти Барилла', price: 115, category: 'Продукты', image: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?auto=format&fit=crop&w=600&q=80', desc: 'Макаронные изделия из твердых сортов пшеницы высшего качества.' },
-            { id: 34, name: 'Масло оливковое Extra V.', price: 540, category: 'Продукты', image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80', desc: 'Итальянское масло первого холодного отжима, идеальная заправка.' },
-            { id: 35, name: 'Томаты Черри в упаковке', price: 165, category: 'Продукты', image: 'https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&w=600&q=80', desc: 'Сладкие отборные томаты черри на ветке, 250г.' },
+            // --- ЗАКУСКИ ---
+            { id: 22, name: 'Картофель фри XL', price: 180, category: 'Закуски', image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80', desc: 'Золотистый, хрустящий картофель с крупной морской солью.', ccal: '320 ккал', customizable: false },
+            { id: 23, name: 'Куриные наггетсы (9 шт)', price: 195, category: 'Закуски', image: 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=80', desc: 'Нежное куриное филе в хрустящей оригинальной панировке.', ccal: '280 ккал', customizable: false },
+            { id: 24, name: 'Сырные палочки моцарелла', price: 240, category: 'Закуски', image: 'https://images.unsplash.com/photo-1548340748-6d2b7d7da280?auto=format&fit=crop&w=600&q=80', desc: 'Тягучий нежный сыр моцарелла в хрустящей золотистой панировке со специями.', ccal: '390 ккал', customizable: false },
+            { id: 25, name: 'Луковые кольца', price: 160, category: 'Закуски', image: 'https://images.unsplash.com/photo-1619531040576-fba200779daf?auto=format&fit=crop&w=600&q=80', desc: 'Пышные кольца сладкого репчатого лука в воздушном хрустящем кляре.', ccal: '210 ккал', customizable: false },
+            { id: 26, name: 'Куриные крылья BBQ', price: 290, category: 'Закуски', image: 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=600&q=80', desc: 'Сочные, пикантные глазированные куриные крылышки, обжаренные в соусе барбекю.', ccal: '420 ккал', customizable: false },
+            { id: 27, name: 'Креветки торпедо в кляре', price: 380, category: 'Закуски', image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80', desc: 'Крупные отборные тигровые креветки, вытянутые в струну, в японской панировке панко.', ccal: '310 ккал', customizable: false },
 
-            // --- ВЫПЕЧКА И ДЕСЕРТЫ (36-42) ---
-            { id: 36, name: 'Круассан классический', price: 140, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80', desc: 'Хрустящая слоеная выпечка на настоящем сливочном масле прямо из печи.' },
-            { id: 37, name: 'Пончик Шоколадный взрыв', price: 110, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=600&q=80', desc: 'Донат со сливочно-шоколадной начинкой и яркой глазурью.' },
-            { id: 38, name: 'Чизкейк Нью-Йорк', price: 240, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=80', desc: 'Классический нежный творожный торт на песочной подложке.' },
-            { id: 39, name: 'Синнабон с корицей', price: 180, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1509365465985-25d11c17e812?auto=format&fit=crop&w=600&q=80', desc: 'Ароматная булочка со шри-ланкийской корицей и сливочной помадкой.' },
-            { id: 40, name: 'Брауни шоколадный', price: 160, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80', desc: 'Американский десерт с влажной текстурой и насыщенным вкусом какао.' },
-            { id: 41, name: 'Макарон (набор 3 шт)', price: 220, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=600&q=80', desc: 'Миндальное французское печенье с начинками: малина, фисташка, манго.' },
-            { id: 42, name: 'Улитка с изюмом', price: 120, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=600&q=80', desc: 'Слоеная улитка с заварным кремом и отборным темным изюмом.' },
+            // --- КОМБО (НОВАЯ КАТЕГОРИЯ) ---
+            { id: 70, name: 'Комбо На Двоих: Бургеры', price: 820, category: 'Комбо', image: 'https://images.unsplash.com/photo-1610614819513-58e34989848b?auto=format&fit=crop&w=600&q=80', desc: 'Два классических чикен-бургера, порция Картофеля Фри XL и две бутылочки Колы.', ccal: '1420 ккал', customizable: false },
+            { id: 71, name: 'Комбо Итальяно', price: 990, category: 'Комбо', image: 'https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=600&q=80', desc: 'Пицца Пепперони, Пицца Маргарита и большой Литр фирменного морса.', ccal: '1980 ккал', customizable: false },
 
-            // --- НАПИТКИ (43-50) ---
-            { id: 43, name: 'Матча Латте на кокосовом', price: 260, category: 'Напитки', image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80', desc: 'Церемониальный японский чай матча с воздушной пенкой кокосового молока.' },
-            { id: 44, name: 'Свежевыжатый Апельсиновый сок', price: 220, category: 'Напитки', image: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=600&q=80', desc: '100% натуральный сок из спелых мандаринов и апельсинов, 300 мл.' },
-            { id: 45, name: 'Кока-Кола Классик 0.5', price: 110, category: 'Напитки', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=600&q=80', desc: 'Освежающий газированный напиток в стеклянной бутылке.' },
-            { id: 46, name: 'Домашний морс брусника', price: 130, category: 'Напитки', image: 'https://images.unsplash.com/photo-1497534446932-c925b458314e?auto=format&fit=crop&w=600&q=80', desc: 'Натуральный морс из лесной брусники собственного приготовления, 0.5 л.' },
-            { id: 47, name: 'Капучино XL', price: 190, category: 'Напитки', image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=600&q=80', desc: 'Классический кофейный напиток на основе эспрессо с пышной молочной пеной.' },
-            { id: 48, name: 'Лимонад Цитрус-Мята', price: 175, category: 'Напитки', image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80', desc: 'Крафтовый холодный лимонад с соком лимона, лайма и свежей мятой.' },
-            { id: 49, name: 'Вода без газа Сан-Бенедетто', price: 140, category: 'Напитки', image: 'https://images.unsplash.com/photo-1608885898957-a599fb1698d6?auto=format&fit=crop&w=600&q=80', desc: 'Премиальная минеральная столовая вода из итальянских источников, 0.5 л.' },
-            { id: 50, name: 'Холодный чай каркаде', price: 150, category: 'Напитки', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=600&q=80', desc: 'Освежающий рубиновый настой лепестков суданской розы с медом.' }
+            // --- МАРКЕТ / ПРОДУКТЫ ---
+            { id: 28, name: 'Молоко отборное 3.2%', price: 95, category: 'Продукты', image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80', desc: 'Натуральное фермерское молоко пастеризованное, 930 мл.', ccal: '60 ккал', customizable: false },
+            { id: 29, name: 'Спелое Авокадо Хасс', price: 180, category: 'Продукты', image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80', desc: 'Идеально мягкое авокадо для ваших завтраков и салатов, 1 шт.', ccal: '160 ккал', customizable: false },
+            { id: 30, name: 'Яйца С0 куриные', price: 130, category: 'Продукты', image: 'https://images.unsplash.com/photo-1516448620398-c5f44bf9f441?auto=format&fit=crop&w=600&q=80', desc: 'Крупные фермерские яйца категории С0, 10 штук.', ccal: '75 ккал', customizable: false },
+            { id: 31, name: 'Сливки 20% Клевер', price: 145, category: 'Продукты', image: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=600&q=80', desc: 'Питьевые нормализованные стерилизованные сливки высшего качества для соусов и кофе.', ccal: '205 ккал', customizable: false },
+            { id: 32, name: 'Сыр Творожный Hochland', price: 190, category: 'Продукты', image: 'https://images.unsplash.com/photo-1634482316885-f3088bc2f9da?auto=format&fit=crop&w=600&q=80', desc: 'Нежный сливочный творожный сыр без зелени, идеальная основа для бутербродов.', ccal: '240 ккал', customizable: false },
+            { id: 35, name: 'Томаты Черри в упаковке', price: 165, category: 'Продукты', image: 'https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&w=600&q=80', desc: 'Органик сладкие томаты черри на ветке в защитной упаковке, 250г.', ccal: '22 ккал', customizable: false },
+
+            // --- ВЫПЕЧКА И ДЕСЕРТЫ ---
+            { id: 36, name: 'Кruассан классический', price: 140, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80', desc: 'Хрустящая слоеная выпечка на настоящем сливочном масле прямо из печи.', ccal: '310 ккал', customizable: false },
+            { id: 38, name: 'Чизкейк Нью-Йорк', price: 240, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=80', desc: 'Классический нежный творожный торт на песочной подложке.', ccal: '420 ккал', customizable: false },
+
+            // --- НАПИТКИ ---
+            { id: 43, name: 'Матча Латте на кокосовом', price: 260, category: 'Напитки', image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80', desc: 'Церемониальный японский чай матча с воздушной пенкой кокосового молока.', ccal: '140 ккал', customizable: false },
+            { id: 45, name: 'Кока-Кола Классик 0.5', price: 110, category: 'Напитки', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=600&q=80', desc: 'Освежающий газированный напиток в стеклянной бутылке.', ccal: '210 ккал', customizable: false },
+            { id: 49, name: 'Вода без газа Сан-Бенедетто', price: 140, category: 'Напитки', image: 'https://images.unsplash.com/photo-1608885898957-a599fb1698d6?auto=format&fit=crop&w=600&q=80', desc: 'Премиальная природная минеральная столовая вода без газа из альпийских источников Италии, 0.5 л.', ccal: '0 ккал', customizable: false }
         ];
 
         const SET_OF_THE_DAY = {
@@ -103,6 +101,14 @@
             desc: 'Пицца Пепперони + Бургер Шеф-Монстр + Большой картофель фри + Сок. Твой идеальный ужин!'
         };
 
+        // ДОСТУПНЫЕ ИНГРЕДИЕНТЫ ДЛЯ КАСТОМИЗАЦИИ
+        const REMOVABLE_INGREDIENTS = ['Лук', 'Томаты', 'Кинза', 'Чесночный соус'];
+        const ADDABLE_INGREDIENTS = [
+            { name: 'Экстра Сыр Чеддер', price: 60 },
+            { name: 'Хрустящий Бекон', price: 80 },
+            { name: 'Острый Халапеньо', price: 40 }
+        ];
+
         function App() {
             const [cart, setCart] = useState([]);
             const [activeCategory, setActiveCategory] = useState('Все');
@@ -111,46 +117,90 @@
             const [promoError, setPromoError] = useState('');
             const [promoSuccess, setPromoSuccess] = useState('');
 
-            const addToCart = (product) => {
+            // Состояния для нового функционала
+            const [selectedProduct, setSelectedProduct] = useState(null);
+            const [removedItems, setRemovedItems] = useState([]);
+            const [addedItems, setAddedItems] = useState([]);
+            const [activeReceipt, setActiveReceipt] = useState(null);
+
+            const openProductModal = (product) => {
+                if (product.id === 100 || !product.customizable) {
+                    addToCartSimple(product);
+                    return;
+                }
+                setSelectedProduct(product);
+                setRemovedItems([]);
+                setAddedItems([]);
+            };
+
+            const addToCartSimple = (product) => {
                 setCart(prev => {
-                    const existing = prev.find(item => item.id === product.id);
+                    const existing = prev.find(item => item.id === product.id && (!item.added || item.added.length === 0) && (!item.removed || item.removed.length === 0));
                     if (existing) {
-                        return prev.map(item => item.id === product.id ? { ...item, count: item.count + 1 } : item);
+                        return prev.map(item => (item.id === product.id && !item.customKey) ? { ...item, count: item.count + 1 } : item);
                     }
-                    return [...prev, { ...product, count: 1 }];
+                    return [...prev, { ...product, count: 1, added: [], removed: [], customKey: null }];
                 });
             };
 
-            const removeFromCart = (productId) => {
+            const handleAddToCartCustomized = () => {
+                const extraCost = addedItems.reduce((sum, item) => sum + item.price, 0);
+                const finalItemPrice = selectedProduct.price + extraCost;
+                const customKey = `${selectedProduct.id}-${removedItems.join(',')}-${addedItems.map(i => i.name).join(',')}`;
+
                 setCart(prev => {
-                    const existing = prev.find(item => item.id === productId);
+                    const existing = prev.find(item => item.customKey === customKey);
+                    if (existing) {
+                        return prev.map(item => item.customKey === customKey ? { ...item, count: item.count + 1 } : item);
+                    }
+                    return [...prev, {
+                        ...selectedProduct,
+                        price: finalItemPrice,
+                        basePrice: selectedProduct.price,
+                        count: 1,
+                        removed: [...removedItems],
+                        added: [...addedItems],
+                        customKey: customKey
+                    }];
+                });
+                setSelectedProduct(null);
+            };
+
+            const removeFromCart = (uniqueKey, isCustom = false) => {
+                setCart(prev => {
+                    const existing = prev.find(item => isCustom ? item.customKey === uniqueKey : (item.id === uniqueKey && !item.customKey));
                     if (!existing) return prev;
                     if (existing.count === 1) {
-                        return prev.filter(item => item.id !== productId);
+                        return prev.filter(item => isCustom ? item.customKey !== uniqueKey : (item.id !== uniqueKey || item.customKey));
                     }
-                    return prev.map(item => item.id === productId ? { ...item, count: item.count - 1 } : item);
+                    return prev.map(item => {
+                        if (isCustom && item.customKey === uniqueKey) return { ...item, count: item.count - 1 };
+                        if (!isCustom && item.id === uniqueKey && !item.customKey) return { ...item, count: item.count - 1 };
+                        return item;
+                    });
                 });
             };
 
-            const getProductCount = (id) => {
-                const item = cart.find(item => item.id === id);
-                return item ? item.count : 0;
+            const addMoreFromCart = (item) => {
+                setCart(prev => prev.map(i => {
+                    if (item.customKey && i.customKey === item.customKey) return { ...i, count: i.count + 1 };
+                    if (!item.customKey && i.id === item.id && !i.customKey) return { ...i, count: i.count + 1 };
+                    return i;
+                }));
+            };
+
+            const toggleRemoveIngredient = (ing) => {
+                setRemovedItems(prev => prev.includes(ing) ? prev.filter(i => i !== ing) : [...prev, ing]);
+            };
+
+            const toggleAddIngredient = (ingObj) => {
+                setAddedItems(prev => prev.some(i => i.name === ingObj.name) ? prev.filter(i => i.name !== ingObj.name) : [...prev, ingObj]);
             };
 
             const totalItems = cart.reduce((sum, item) => sum + item.count, 0);
             const subTotal = cart.reduce((sum, item) => sum + (item.price * item.count), 0);
             
-            let deliveryPrice = 0;
-            if (subTotal > 0) {
-                if (subTotal >= 1000) {
-                    deliveryPrice = 0;
-                } else if (subTotal >= 500) {
-                    deliveryPrice = 150;
-                } else {
-                    deliveryPrice = 250;
-                }
-            }
-
+            let deliveryPrice = subTotal > 0 ? (subTotal >= 1000 ? 0 : (subTotal >= 500 ? 150 : 250)) : 0;
             const discountAmount = Math.round(subTotal * (discount / 100));
             const finalTotal = subTotal - discountAmount + deliveryPrice;
 
@@ -166,17 +216,79 @@
                 }
             };
 
-            const categories = ['Все', 'Бургеры', 'Пицца', 'Суши', 'Закуски', 'Продукты', 'Выпечка', 'Напитки'];
-            const filteredProducts = activeCategory === 'Все' 
-                ? PRODUCTS 
-                : PRODUCTS.filter(p => p.category === activeCategory);
+            // Генерация финального чека заказа
+            const handleCheckout = () => {
+                if (cart.length === 0) return;
+                
+                const receiptNo = Math.floor(100000 + Math.random() * 900000);
+                const currentDateTime = new Date().toLocaleString('ru-RU');
+                
+                setActiveReceipt({
+                    receiptNo,
+                    dateTime: currentDateTime,
+                    items: [...cart],
+                    subTotal,
+                    discount,
+                    discountAmount,
+                    deliveryPrice,
+                    finalTotal
+                });
+                setCart([]); // Очищаем корзину после успешной фиксации
+            };
+
+            // Скачивание ASCII-чека в файл .txt на устройство
+            const downloadReceiptFile = () => {
+                if (!activeReceipt) return;
+
+                let text = `========================================\n`;
+                text += `             CRUNCH.GO RECEIPT          \n`;
+                text += `========================================\n`;
+                text += `Кассовый чек №: ${activeReceipt.receiptNo}\n`;
+                text += `Дата и время:   ${activeReceipt.dateTime}\n`;
+                text += `Статус:         ОПЛАЧЕНО / ДОСТАВКА\n`;
+                text += `----------------------------------------\n\n`;
+
+                activeReceipt.items.forEach((item, index) => {
+                    text += `${index + 1}. ${item.name} x ${item.count}\n`;
+                    if (item.removed && item.removed.length > 0) {
+                        text += `   [Убрано]: ${item.removed.join(', ')}\n`;
+                    }
+                    if (item.added && item.added.length > 0) {
+                        text += `   [Добавлено]: ${item.added.map(i => i.name).join(', ')}\n`;
+                    }
+                    text += `   Цена: ${item.price * item.count} руб.\n\n`;
+                });
+
+                text += `----------------------------------------\n`;
+                text += `Сумма позиций:  ${activeReceipt.subTotal} руб.\n`;
+                if (activeReceipt.discount > 0) {
+                    text += `Скидка (${activeReceipt.discount}%): -${activeReceipt.discountAmount} руб.\n`;
+                }
+                text += `Доставка:       ${activeReceipt.deliveryPrice === 0 ? 'БЕСПЛАТНО' : activeReceipt.deliveryPrice + ' руб.'}\n`;
+                text += `========================================\n`;
+                text += `ИТОГО К ОПЛАТЕ: ${activeReceipt.finalTotal} РУБ.\n`;
+                text += `========================================\n`;
+                text += `   Спасибо за заказ! Приятного аппетита! \n`;
+
+                const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `CrunchGo_Receipt_${activeReceipt.receiptNo}.txt`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            const categories = ['Все', 'Бургеры', 'Пицца', 'Суши', 'Супы', 'Закуски', 'Комбо', 'Продукты', 'Выпечка', 'Напитки'];
+            const filteredProducts = activeCategory === 'Все' ? PRODUCTS : PRODUCTS.filter(p => p.category === activeCategory);
 
             return (
                 <div className="min-h-screen bg-gray-50 pb-20">
                     {/* ХЕДЕР */}
                     <header className="bg-gradient-to-r from-orange-500 to-orange-600 text-white sticky top-0 z-50 shadow-lg">
                         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-                            <h1 className="text-2xl font-black tracking-tighter flex items-center gap-2 cursor-pointer">
+                            <h1 onClick={() => setActiveReceipt(null)} className="text-2xl font-black tracking-tighter flex items-center gap-2 cursor-pointer">
                                 <span className="bg-white p-2 rounded-xl shadow-inner flex items-center justify-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-orange-600">
                                         <path d="M11.996 2.25a.75.75 0 0 1 .75.75v1.272a5.253 5.253 0 0 1 4.542 4.195 4.5 4.5 0 0 1 1.712 3.533c0 1.942-1.229 3.597-2.94 4.218l.04.482a2.25 2.25 0 0 1-2.242 2.437H10.14a2.25 2.25 0 0 1-2.242-2.437l.04-.482c-1.711-.62-2.94-2.276-2.94-4.218a4.5 4.5 0 0 1 1.712-3.533 5.253 5.253 0 0 1 4.532-4.194V3a.75.75 0 0 1 .755-.75ZM18 12a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3c0 .878.379 1.667 1 2.22A4.47 4.47 0 0 1 9.4 15h5.2c1.01 0 1.944-.336 2.7-1.12.338-.344.7-.72.7-1.66ZM9.398 16.5a5.955 5.955 0 0 0-1.558.83l-.04.482a.75.75 0 0 0 .747.813h6.906a.75.75 0 0 0 .747-.813l-.04-.482a5.955 5.955 0 0 0-1.558-.83H9.398Z" />
@@ -185,226 +297,323 @@
                                 <span>CRUNCH.GO</span>
                             </h1>
                             <div className="flex items-center gap-4">
-                                <span className="hidden md:inline-block text-xs font-semibold bg-orange-700/40 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                                    🚀 Быстрая доставка из ресторанов и дарксторов
-                                </span>
                                 <a href="#cart" className="bg-white text-orange-600 font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-md hover:bg-orange-50 active:scale-95 transition-all text-sm">
                                     <span>Корзина</span>
-                                    {totalItems > 0 && (
-                                        <span className="bg-orange-600 text-white text-xs px-2 py-0.5 rounded-md">
-                                            {totalItems}
-                                        </span>
-                                    )}
+                                    {totalItems > 0 && <span className="bg-orange-600 text-white text-xs px-2 py-0.5 rounded-md">{totalItems}</span>}
                                 </a>
                             </div>
                         </div>
                     </header>
 
-                    {/* ГЛАВНЫЙ КОНТЕНТ */}
-                    <main className="max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        
-                        {/* ЛЕНТА ТОВАРОВ И КАТЕГОРИЙ */}
-                        <div className="lg:col-span-2 space-y-8">
-                            
-                            {/* СЕТ ДНЯ */}
-                            <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-2 group hover:shadow-md transition-shadow">
-                                <div className="relative h-56 md:h-full min-h-[220px]">
-                                    <img src={SET_OF_THE_DAY.image} alt={SET_OF_THE_DAY.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                    <div className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-black px-3 py-1.5 rounded-lg uppercase tracking-wide shadow-md">
-                                        🔥 Сет Дня
-                                    </div>
+                    {/* ОСНОВНОЙ РАБОЧИЙ ЭКРАН ИЛИ КАССОВЫЙ ЧЕК */}
+                    {activeReceipt ? (
+                        <div className="max-w-md mx-auto px-4 mt-12 animate-receipt">
+                            <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-200 relative overflow-hidden bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+                                <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-orange-500 via-red-500 to-orange-500"></div>
+                                
+                                <div className="text-center space-y-2 mt-4">
+                                    <div className="text-3xl font-black tracking-tight text-gray-900">CRUNCH.GO</div>
+                                    <p className="text-xs text-gray-400 uppercase font-bold tracking-wider">Кассовый чек №{activeReceipt.receiptNo}</p>
+                                    <p className="text-[11px] text-gray-400">{activeReceipt.dateTime}</p>
                                 </div>
-                                <div className="p-6 flex flex-col justify-between space-y-4 bg-gradient-to-br from-white to-orange-50/20">
-                                    <div className="space-y-2">
-                                        <h3 className="text-2xl font-extrabold tracking-tight text-gray-900">{SET_OF_THE_DAY.name}</h3>
-                                        <p className="text-sm text-gray-500 leading-relaxed">{SET_OF_THE_DAY.desc}</p>
-                                    </div>
-                                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                                        <div>
-                                            <span className="text-xs text-gray-400 line-through block">{SET_OF_THE_DAY.oldPrice} ₽</span>
-                                            <span className="text-2xl font-black text-orange-600">{SET_OF_THE_DAY.price} ₽</span>
+
+                                <div className="border-b border-dashed border-gray-300 my-6"></div>
+
+                                <div className="space-y-4">
+                                    {activeReceipt.items.map((item, index) => (
+                                        <div key={index} className="text-xs flex justify-between items-start gap-4">
+                                            <div className="space-y-0.5">
+                                                <span className="font-extrabold text-gray-900">{item.name}</span>
+                                                <span className="text-gray-400 block">{item.count} шт. × {item.price / item.count} ₽</span>
+                                                {item.removed?.length > 0 && <p className="text-[10px] text-red-500 font-medium">Без: {item.removed.join(', ')}</p>}
+                                                {item.added?.length > 0 && <p className="text-[10px] text-green-600 font-medium">+ {item.added.map(i=>i.name).join(', ')}</p>}
+                                            </div>
+                                            <span className="font-bold text-gray-900 whitespace-nowrap">{item.price * item.count} ₽</span>
                                         </div>
-                                        {getProductCount(SET_OF_THE_DAY.id) === 0 ? (
-                                            <button onClick={() => addToCart(SET_OF_THE_DAY)} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer text-sm">
-                                                Добавить
-                                            </button>
-                                        ) : (
-                                            <div className="flex items-center bg-orange-100 text-orange-600 rounded-xl font-bold border border-orange-200 p-1">
-                                                <button onClick={() => removeFromCart(SET_OF_THE_DAY.id)} className="px-3 py-1 text-lg hover:bg-white rounded-lg transition-colors">-</button>
-                                                <span className="px-3 text-sm">{getProductCount(SET_OF_THE_DAY.id)}</span>
-                                                <button onClick={() => addToCart(SET_OF_THE_DAY)} className="px-3 py-1 text-lg hover:bg-white rounded-lg transition-colors">+</button>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* СЕЛЕКТОР КАТЕГОРИЙ */}
-                            <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-none sticky top-[72px] bg-gray-50 py-2 z-40">
-                                {categories.map(cat => (
-                                    <button
-                                        key={cat}
-                                        onClick={() => setActiveCategory(cat)}
-                                        className={`px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all cursor-pointer ${
-                                            activeCategory === cat 
-                                                ? 'bg-orange-500 text-white shadow-md shadow-orange-100' 
-                                                : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200/60'
-                                        }`}
-                                    >
-                                        {cat}
-                                    </button>
-                                ))}
-                            </div>
-
-                            {/* СЕТКА ТОВАРОВ */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                {filteredProducts.map(product => {
-                                    const count = getProductCount(product.id);
-                                    return (
-                                        <div key={product.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow group">
-                                            <div className="relative h-44 overflow-hidden bg-gray-100">
-                                                <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300" />
-                                                <span className="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm text-[10px] font-bold px-2 py-0.5 rounded-md text-gray-500">
-                                                    {product.category}
-                                                </span>
-                                            </div>
-                                            <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                                                <div className="space-y-1">
-                                                    <h4 className="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">{product.name}</h4>
-                                                    <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">{product.desc}</p>
-                                                </div>
-                                                <div className="flex justify-between items-center pt-2 border-t border-gray-50">
-                                                    <span className="font-extrabold text-lg text-gray-950">{product.price} ₽</span>
-                                                    
-                                                    {count === 0 ? (
-                                                        <button 
-                                                            onClick={() => addToCart(product)}
-                                                            className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer"
-                                                        >
-                                                            В корзину +
-                                                        </button>
-                                                    ) : (
-                                                        <div className="flex items-center bg-orange-50 text-orange-600 rounded-xl font-bold border border-orange-200 p-0.5">
-                                                            <button onClick={() => removeFromCart(product.id)} className="px-2.5 py-1 text-sm hover:bg-white rounded-lg transition-colors">-</button>
-                                                            <span className="px-2 text-xs">{count}</span>
-                                                            <button onClick={() => addToCart(product)} className="px-2.5 py-1 text-sm hover:bg-white rounded-lg transition-colors">+</button>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                        {/* БОКОВАЯ КОРЗИНА И ОФОРМЛЕНИЕ */}
-                        <div id="cart" className="lg:col-span-1">
-                            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 sticky top-24 space-y-6">
-                                <h3 className="text-lg font-black text-gray-900 border-b pb-4 flex justify-between items-center">
-                                    <span>Корзина</span>
-                                    <span className="text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-md font-normal">{totalItems} шт.</span>
-                                </h3>
-
-                                {cart.length === 0 ? (
-                                    <div className="text-center py-12 text-gray-400 space-y-3">
-                                        <div className="text-4xl">🛒</div>
-                                        <p className="text-xs leading-relaxed">Внутри пока пусто.<br/>Выбирайте категории выше и добавляйте товары!</p>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4 max-h-72 overflow-y-auto pr-1 scrollbar-none">
-                                        {cart.map(item => (
-                                            <div key={item.id} className="flex justify-between items-center text-xs gap-3">
-                                                <img src={item.image} className="w-10 h-10 object-cover rounded-lg bg-gray-50" />
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="font-bold text-gray-800 truncate">{item.name}</div>
-                                                    <div className="text-gray-400 mt-0.5">{item.price} ₽ × {item.count}</div>
-                                                </div>
-                                                <div className="flex items-center bg-gray-100 rounded-lg p-0.5 shrink-0">
-                                                    <button onClick={() => removeFromCart(item.id)} className="px-1.5 py-0.5 text-gray-500 hover:bg-white rounded-md font-bold">-</button>
-                                                    <span className="px-1.5 font-mono font-bold text-[11px]">{item.count}</span>
-                                                    <button onClick={() => addToCart(item)} className="px-1.5 py-0.5 text-gray-500 hover:bg-white rounded-md font-bold">+</button>
-                                                </div>
-                                                <div className="w-16 text-right font-extrabold text-gray-900 shrink-0">
-                                                    {item.price * item.count} ₽
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-
-                                {/* ИНФОРМАЦИЯ О СТОИМОСТИ ДОСТАВКИ */}
-                                {subTotal > 0 && (
-                                    <div className="bg-orange-50 rounded-2xl p-3 border border-orange-100 text-[11px] text-orange-800 leading-normal">
-                                        <div className="font-bold mb-1">📊 Динамическая доставка:</div>
-                                        <div>• Заказ до 500 ₽ → <span className="font-bold">250 ₽</span></div>
-                                        <div>• Заказ от 500 ₽ → <span className="font-bold">150 ₽</span></div>
-                                        <div>• Заказ от 1000 ₽ → <span className="font-bold text-green-600">Бесплатно!</span></div>
-                                        {subTotal < 1000 && (
-                                            <div className="mt-2 text-gray-600 border-t border-orange-200/50 pt-1.5">
-                                                Добавь товаров еще на <span className="font-bold text-orange-600">{1000 - subTotal} ₽</span> для бесплатной доставки.
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-
-                                {/* ПРОМОКОД */}
-                                <div className="pt-4 border-t border-gray-100">
-                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">Промокод на скидку</label>
-                                    <div className="flex gap-2">
-                                        <input 
-                                            type="text" 
-                                            value={promoCode}
-                                            onChange={(e) => setPromoCode(e.target.value)}
-                                            placeholder="Код: CRUNCH20" 
-                                            className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs flex-1 focus:outline-none focus:border-orange-400 uppercase font-mono font-bold tracking-wide"
-                                        />
-                                        <button onClick={handleApplyPromo} className="bg-gray-900 hover:bg-gray-950 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer">
-                                            Ок
-                                        </button>
-                                    </div>
-                                    {promoError && <p className="text-[11px] text-red-500 mt-1.5 font-medium">❌ {promoError}</p>}
-                                    {promoSuccess && <p className="text-[11px] text-green-600 mt-1.5 font-medium">✓ {promoSuccess}</p>}
+                                    ))}
                                 </div>
 
-                                {/* ЧЕК / ИТОГО */}
-                                <div className="bg-gray-50/80 rounded-2xl p-4 space-y-2.5 text-xs font-semibold text-gray-500">
+                                <div className="border-b border-dashed border-gray-300 my-6"></div>
+
+                                <div className="space-y-2 text-xs font-semibold text-gray-500">
                                     <div className="flex justify-between">
-                                        <span>Товары:</span>
-                                        <span className="text-gray-900">{subTotal} ₽</span>
+                                        <span>Сумма:</span>
+                                        <span className="text-gray-900">{activeReceipt.subTotal} ₽</span>
                                     </div>
-                                    {discount > 0 && (
+                                    {activeReceipt.discount > 0 && (
                                         <div className="flex justify-between text-green-600">
-                                            <span>Скидка ({discount}%):</span>
-                                            <span>-{discountAmount} ₽</span>
+                                            <span>Скидка ({activeReceipt.discount}%):</span>
+                                            <span>-{activeReceipt.discountAmount} ₽</span>
                                         </div>
                                     )}
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex justify-between">
                                         <span>Доставка:</span>
-                                        <span className={`font-bold ${deliveryPrice === 0 && subTotal > 0 ? 'text-green-600' : 'text-gray-900'}`}>
-                                            {subTotal === 0 ? '0 ₽' : deliveryPrice === 0 ? 'Бесплатно' : `${deliveryPrice} ₽`}
-                                        </span>
+                                        <span className="text-gray-900">{activeReceipt.deliveryPrice === 0 ? 'Бесплатно' : `${activeReceipt.deliveryPrice} ₽`}</span>
                                     </div>
-                                    <div className="flex justify-between text-base font-black text-gray-900 pt-3 border-t border-dashed border-gray-200">
-                                        <span>К оплате:</span>
-                                        <span className="text-orange-600 text-lg">{finalTotal} ₽</span>
+                                    <div className="flex justify-between text-base font-black text-gray-900 pt-4 border-t border-gray-200 mt-2">
+                                        <span>ИТОГО К ОПЛАТЕ:</span>
+                                        <span className="text-orange-600 text-xl">{activeReceipt.finalTotal} ₽</span>
                                     </div>
                                 </div>
 
-                                {/* ОФОРМЛЕНИЕ */}
-                                <button 
-                                    onClick={() => cart.length > 0 ? alert('Заказ оформлен! Еда уже готовится 🚀') : alert('Добавьте товары в корзину!')}
-                                    className={`w-full font-bold py-4 rounded-xl shadow-lg transition-all text-center text-sm text-white cursor-pointer ${
-                                        cart.length > 0 
-                                            ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-100 hover:translate-y-[-1px]' 
-                                            : 'bg-gray-300 shadow-none cursor-not-allowed'
-                                    }`}
-                                >
-                                    Заказать доставку 🚀
-                                </button>
+                                <div className="mt-8 space-y-3">
+                                    <button onClick={downloadReceiptFile} className="w-full bg-gray-900 hover:bg-black text-white text-xs font-bold py-3.5 rounded-xl shadow-md transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer">
+                                        📥 Сохранить чек в файлы телефона
+                                    </button>
+                                    <button onClick={() => setActiveReceipt(null)} className="w-full bg-orange-50 hover:bg-orange-100 text-orange-600 text-xs font-bold py-3 rounded-xl transition-all text-center cursor-pointer">
+                                        Вернуться в меню
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </main>
+                    ) : (
+                        <main className="max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            {/* ЛЕНТА ТОВАРОВ */}
+                            <div className="lg:col-span-2 space-y-8">
+                                {/* СЕТ ДНЯ */}
+                                <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-2 group hover:shadow-md transition-shadow">
+                                    <div className="relative h-56 md:h-full min-h-[220px]">
+                                        <img src={SET_OF_THE_DAY.image} alt={SET_OF_THE_DAY.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                        <div className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-black px-3 py-1.5 rounded-lg uppercase tracking-wide">🔥 Сет Дня</div>
+                                    </div>
+                                    <div className="p-6 flex flex-col justify-between space-y-4 bg-gradient-to-br from-white to-orange-50/20">
+                                        <div className="space-y-2">
+                                            <h3 className="text-2xl font-extrabold text-gray-900">{SET_OF_THE_DAY.name}</h3>
+                                            <p className="text-sm text-gray-500 leading-relaxed">{SET_OF_THE_DAY.desc}</p>
+                                        </div>
+                                        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                                            <div>
+                                                <span className="text-xs text-gray-400 line-through block">{SET_OF_THE_DAY.oldPrice} ₽</span>
+                                                <span className="text-2xl font-black text-orange-600">{SET_OF_THE_DAY.price} ₽</span>
+                                            </div>
+                                            <button onClick={() => addToCartSimple(SET_OF_THE_DAY)} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition-all active:scale-95 text-sm cursor-pointer">
+                                                Добавить
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* СЕЛЕКТОР КАТЕГОРИЙ */}
+                                <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-none sticky top-[72px] bg-gray-50 py-2 z-40">
+                                    {categories.map(cat => (
+                                        <button
+                                            key={cat}
+                                            onClick={() => setActiveCategory(cat)}
+                                            className={`px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all cursor-pointer ${
+                                                activeCategory === cat ? 'bg-orange-500 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200/60'
+                                            }`}
+                                        >
+                                            {cat}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* СЕТКА ТОВАРОВ */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    {filteredProducts.map(product => {
+                                        return (
+                                            <div 
+                                                key={product.id} 
+                                                onClick={() => openProductModal(product)}
+                                                className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow group cursor-pointer"
+                                            >
+                                                <div className="relative h-44 overflow-hidden bg-gray-100">
+                                                    <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300" />
+                                                    <span className="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm text-[10px] font-bold px-2 py-0.5 rounded-md text-gray-500">{product.category}</span>
+                                                </div>
+                                                <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                                                    <div className="space-y-1">
+                                                        <h4 className="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">{product.name}</h4>
+                                                        <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">{product.desc}</p>
+                                                    </div>
+                                                    <div className="flex justify-between items-center pt-2 border-t border-gray-50">
+                                                        <span className="font-extrabold text-lg text-gray-950">{product.price} ₽</span>
+                                                        <span className="text-[11px] text-orange-500 font-bold bg-orange-50 px-2.5 py-1 rounded-lg group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                                                            {product.customizable ? 'Настроить ⚙️' : 'В корзину +'}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* БОКОВАЯ КОРЗИНА */}
+                            <div id="cart" className="lg:col-span-1">
+                                <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 sticky top-24 space-y-6">
+                                    <h3 className="text-lg font-black text-gray-900 border-b pb-4 flex justify-between items-center">
+                                        <span>Корзина</span>
+                                        <span className="text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-md font-normal">{totalItems} шт.</span>
+                                    </h3>
+
+                                    {cart.length === 0 ? (
+                                        <div className="text-center py-12 text-gray-400 space-y-3">
+                                            <div className="text-4xl">🛒</div>
+                                            <p className="text-xs leading-relaxed">Внутри пока пусто.<br/>Выбирайте товары для заказа.</p>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-4 max-h-72 overflow-y-auto pr-1 scrollbar-none">
+                                            {cart.map((item, index) => (
+                                                <div key={item.customKey || `${item.id}-${index}`} className="flex justify-between items-start text-xs gap-3 border-b border-gray-50 pb-3">
+                                                    <img src={item.image} className="w-10 h-10 object-cover rounded-lg bg-gray-50 shrink-0" />
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="font-bold text-gray-800 truncate">{item.name}</div>
+                                                        {item.removed?.length > 0 && <p className="text-[10px] text-red-400">Без: {item.removed.join(', ')}</p>}
+                                                        {item.added?.length > 0 && <p className="text-[10px] text-green-500">+ {item.added.map(i=>i.name).join(', ')}</p>}
+                                                        <div className="text-gray-400 mt-0.5">{item.price} ₽ × {item.count}</div>
+                                                    </div>
+                                                    <div className="flex items-center bg-gray-100 rounded-lg p-0.5 shrink-0">
+                                                        <button onClick={() => removeFromCart(item.customKey || item.id, !!item.customKey)} className="px-1.5 py-0.5 text-gray-500 hover:bg-white rounded-md font-bold">-</button>
+                                                        <span className="px-1.5 font-mono font-bold text-[11px]">{item.count}</span>
+                                                        <button onClick={() => addMoreFromCart(item)} className="px-1.5 py-0.5 text-gray-500 hover:bg-white rounded-md font-bold">+</button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {subTotal > 0 && (
+                                        <div className="bg-orange-50 rounded-2xl p-3 border border-orange-100 text-[11px] text-orange-800 leading-normal">
+                                            <div className="font-bold mb-1">📊 Динамическая доставка:</div>
+                                            <div>• Заказ до 500 ₽ → <span className="font-bold">250 ₽</span></div>
+                                            <div>• Заказ от 500 ₽ → <span className="font-bold">150 ₽</span></div>
+                                            <div>• Заказ от 1000 ₽ → <span className="font-bold text-green-600">Бесплатно!</span></div>
+                                        </div>
+                                    )}
+
+                                    {/* ПРОМОКОД */}
+                                    <div className="pt-2">
+                                        <div className="flex gap-2">
+                                            <input 
+                                                type="text" 
+                                                value={promoCode}
+                                                onChange={(e) => setPromoCode(e.target.value)}
+                                                placeholder="Код: CRUNCH20" 
+                                                className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs flex-1 uppercase font-mono font-bold"
+                                            />
+                                            <button onClick={handleApplyPromo} className="bg-gray-900 text-white font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Ок</button>
+                                        </div>
+                                        {promoError && <p className="text-[11px] text-red-500 mt-1.5">❌ {promoError}</p>}
+                                        {promoSuccess && <p className="text-[11px] text-green-600 mt-1.5">✓ {promoSuccess}</p>}
+                                    </div>
+
+                                    {/* ИТОГО */}
+                                    <div className="bg-gray-50/80 rounded-2xl p-4 space-y-2.5 text-xs font-semibold text-gray-500">
+                                        <div className="flex justify-between">
+                                            <span>Сумма:</span>
+                                            <span className="text-gray-900">{subTotal} ₽</span>
+                                        </div>
+                                        {discount > 0 && (
+                                            <div className="flex justify-between text-green-600">
+                                                <span>Скидка ({discount}%):</span>
+                                                <span>-{discountAmount} ₽</span>
+                                            </div>
+                                        )}
+                                        <div className="flex justify-between">
+                                            <span>Доставка:</span>
+                                            <span className="text-gray-900">{subTotal === 0 ? '0 ₽' : deliveryPrice === 0 ? 'Бесплатно' : `${deliveryPrice} ₽`}</span>
+                                        </div>
+                                        <div className="flex justify-between text-base font-black text-gray-900 pt-3 border-t border-dashed border-gray-200">
+                                            <span>К оплате:</span>
+                                            <span className="text-orange-600 text-lg">{finalTotal} ₽</span>
+                                        </div>
+                                    </div>
+
+                                    <button 
+                                        onClick={handleCheckout}
+                                        className={`w-full font-bold py-4 rounded-xl shadow-lg text-center text-sm text-white cursor-pointer ${
+                                            cart.length > 0 ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-100' : 'bg-gray-300 shadow-none cursor-not-allowed'
+                                        }`}
+                                        disabled={cart.length === 0}
+                                    >
+                                        Заказать доставку 🚀
+                                    </button>
+                                </div>
+                            </div>
+                        </main>
+                    )}
+
+                    {/* МОДАЛЬНОЕ ОКНО ДЕТАЛЕЙ БЛЮДА И КАСТОМИЗАЦИИ */}
+                    {selectedProduct && (
+                        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                            <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-100 flex flex-col">
+                                <div className="relative h-64 bg-gray-100 shrink-0">
+                                    <img src={selectedProduct.image} className="w-full h-full object-cover" />
+                                    <button onClick={() => setSelectedProduct(null)} className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm hover:bg-white text-gray-700 font-bold p-2 rounded-full w-10 h-10 flex items-center justify-center shadow-md cursor-pointer">✕</button>
+                                </div>
+                                
+                                <div className="p-6 space-y-6 flex-1">
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between items-start gap-4">
+                                            <h3 className="text-2xl font-black text-gray-900 leading-tight">{selectedProduct.name}</h3>
+                                            <span className="bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap mt-1">{selectedProduct.ccal}</span>
+                                        </div>
+                                        <p className="text-xs text-gray-500 leading-relaxed">{selectedProduct.desc}</p>
+                                    </div>
+
+                                    {/* ИНГРЕДИЕНТЫ МОЖНО УБРАТЬ */}
+                                    <div className="space-y-2">
+                                        <h4 className="text-xs font-black text-gray-400 uppercase tracking-wider">Убрать из состава (Бесплатно)</h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {REMOVABLE_INGREDIENTS.map(ing => {
+                                                const isRemoved = removedItems.includes(ing);
+                                                return (
+                                                    <button 
+                                                        key={ing} 
+                                                        onClick={() => toggleRemoveIngredient(ing)}
+                                                        className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                                                            isRemoved ? 'border-red-500 bg-red-50 text-red-600' : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+                                                        }`}
+                                                    >
+                                                        {isRemoved ? `✕ Без ${ing.toLowerCase()}` : ing}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    {/* ИНГРЕДИЕНТЫ МОЖНО ДОБАВИТЬ */}
+                                    <div className="space-y-2">
+                                        <h4 className="text-xs font-black text-gray-400 uppercase tracking-wider">Добавить в блюдо (За деньги)</h4>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                            {ADDABLE_INGREDIENTS.map(ing => {
+                                                const isAdded = addedItems.some(i => i.name === ing.name);
+                                                return (
+                                                    <button 
+                                                        key={ing.name} 
+                                                        onClick={() => toggleAddIngredient(ing)}
+                                                        className={`px-3 py-2.5 rounded-xl text-xs font-bold border flex justify-between items-center transition-all cursor-pointer ${
+                                                            isAdded ? 'border-green-500 bg-green-50 text-green-600' : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+                                                        }`}
+                                                    >
+                                                        <span>{ing.name}</span>
+                                                        <span className={isAdded ? 'text-green-600' : 'text-gray-400'}>+{ing.price} ₽</span>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    {/* ДОБАВЛЕНИЕ С УЧЕТОМ СТОИМОСТИ */}
+                                    <div className="pt-4 border-t flex items-center justify-between gap-4">
+                                        <div>
+                                            <span className="text-[10px] text-gray-400 block font-bold uppercase">Итоговая стоимость</span>
+                                            <span className="text-2xl font-black text-gray-900">
+                                                {selectedProduct.price + addedItems.reduce((sum, i) => sum + i.price, 0)} ₽
+                                            </span>
+                                        </div>
+                                        <button 
+                                            onClick={handleAddToCartCustomized}
+                                            className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-3.5 rounded-xl text-sm shadow-md transition-all active:scale-95 cursor-pointer"
+                                        >
+                                            Добавить в корзину +
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         }
