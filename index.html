@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUNCH.GO — Доставка еды и продуктов</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- React 19 и ReactDOM -->
+    <script src="https://unpkg.com/react@19/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@19/umd/react-dom.development.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        .scrollbar-none::-webkit-scrollbar { display: none; }
+        .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans selection:bg-orange-500 selection:text-white">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // РАСШИРЕННАЯ БАЗА ДАННЫХ С РЕАЛЬНЫМИ ФОТОГРАФИЯМИ
+        const PRODUCTS = [
+            // --- БУРГЕРЫ ---
+            { id: 1, name: 'Бургер Шеф-Монстр', price: 450, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80', desc: 'Двойная мраморная говядина, плавленый чеддер, маринованный лук и фирменный BBQ-соус.' },
+            { id: 2, name: 'Чикен Крисп Бургер', price: 340, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=600&q=80', desc: 'Хрустящее куриное филе в панировке, салат Айсберг и нежный майонезно-чесночный соус.' },
+            { id: 3, name: 'BBQ Бекон Бургер', price: 490, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=600&q=80', desc: 'Котлета на гриле, хрустящий бекон, карамелизованный лук и подкопченный соус.' },
+            
+            // --- ПИЦЦА ---
+            { id: 4, name: 'Пицца Пепперони', price: 620, category: 'Пицца', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80', desc: 'Пикантная колбаска пепперони, много моцареллы, томатный соус, итальянские травы.' },
+            { id: 5, name: 'Пицца Четыре Сыра', price: 690, category: 'Пицца', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80', desc: 'Изысканное сочетание дорблю, пармезана, чеддера и нежной моцареллы со сливочным соусом.' },
+            { id: 6, name: 'Пицца Сливочная цыпочка', price: 580, category: 'Пицца', image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80', desc: 'Нежное куриное филе, томаты черри, моцарелла и чесночный соус альфредо.' },
+
+            // --- СУШИ И РОЛЛЫ ---
+            { id: 7, name: 'Ролл Филадельфия Люкс', price: 550, category: 'Суши', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80', desc: 'Много свежего лосося, толстый слой творожного сыра, авокадо и огурец.' },
+            { id: 8, name: 'Запеченный ролл с креветкой', price: 480, category: 'Суши', image: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80', desc: 'Тигровая креветка, сливочный сыр, под нежной острой шапочкой из спайси-соуса.' },
+
+            // --- ПРОДУКТЫ (МАРКЕТ) ---
+            { id: 9, name: 'Молоко отборное 3.2%', price: 95, category: 'Продукты', image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80', desc: 'Натуральное фермерское молоко пастеризованное, 930 мл.' },
+            { id: 10, name: 'Спелое Авокадо Хасс', price: 180, category: 'Продукты', image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80', desc: 'Идеально мягкое авокадо для ваших завтраков и салатов, 1 шт.' },
+            { id: 11, name: 'Яйца С0 куриные', price: 130, category: 'Продукты', image: 'https://images.unsplash.com/photo-1516448620398-c5f44bf9f441?auto=format&fit=crop&w=600&q=80', desc: 'Крупные фермерские яйца категории С0, 10 штук.' },
+
+            // --- ВЫПЕЧКА И ДЕСЕРТЫ ---
+            { id: 12, name: 'Круассан классический', price: 140, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80', desc: 'Хрустящая слоеная выпечка на настоящем сливочном масле прямо из печи.' },
+            { id: 13, name: 'Пончик Шоколадный взрыв', price: 110, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=600&q=80', desc: 'Донат со сливочно-шоколадной начинкой и яркой глазурью.' },
+
+            // --- НАПИТКИ ---
+            { id: 14, name: 'Матча Латте на кокосовом', price: 260, category: 'Напитки', image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80', desc: 'Церемониальный японский чай матча с воздушной пенкой кокосового молока.' },
+            { id: 15, name: 'Свежевыжатый Апельсиновый сок', price: 220, category: 'Напитки', image: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=600&q=80', desc: '100% натуральный сок из спелых мандаринов и апельсинов, 300 мл.' }
+        ];
+
+        const SET_OF_THE_DAY = {
+            id: 100,
+            name: 'Гранд-Сет "Мега Микс"',
+            oldPrice: 1650,
+            price: 1190,
+            image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80',
+            desc: 'Пицца Пепперони + Бургер Шеф-Монстр + Большой картофель фри + Сок. Твой идеальный ужин!'
+        };
+
+        function App() {
+            const [cart, setCart] = useState([]);
+            const [activeCategory, setActiveCategory] = useState('Все');
+            const [promoCode, setPromoCode] = useState('');
+            const [discount, setDiscount] = useState(0);
+            const [promoError, setPromoError] = useState('');
+            const [promoSuccess, setPromoSuccess] = useState('');
+
+            const addToCart = (product) => {
+                setCart(prev => {
+                    const existing = prev.find(item => item.id === product.id);
+                    if (existing) {
+                        return prev.map(item => item.id === product.id ? { ...item, count: item.count + 1 } : item);
+                    }
+                    return [...prev, { ...product, count: 1 }];
+                });
+            };
+
+            const removeFromCart = (productId) => {
+                setCart(prev => {
+                    const existing = prev.find(item => item.id === productId);
+                    if (existing.count === 1) {
+                        return prev.filter(item => item.id !== productId);
+                    }
+                    return prev.map(item => item.id === productId ? { ...item, count: item.count - 1 } : item);
+                });
+            };
+
+            const getProductCount = (id) => {
+                const item = cart.find(item => item.id === id);
+                return item ? item.count : 0;
+            };
+
+            const totalItems = cart.reduce((sum, item) => sum + item.count, 0);
+            const subTotal = cart.reduce((sum, item) => sum + (item.price * item.count), 0);
+            const discountAmount = Math.round(subTotal * (discount / 100));
+            const finalTotal = subTotal - discountAmount;
+
+            const handleApplyPromo = () => {
+                if (promoCode.trim().toUpperCase() === 'NYASH') {
+                    setDiscount(20);
+                    setPromoSuccess('Промокод применен! -20% 🔥');
+                    setPromoError('');
+                } else {
+                    setPromoError('Неверный код. Попробуйте NYASH');
+                    setPromoSuccess('');
+                    setDiscount(0);
+                }
+            };
+
+            const categories = ['Все', 'Бургеры', 'Пицца', 'Суши', 'Продукты', 'Выпечка', 'Напитки'];
+            const filteredProducts = activeCategory === 'Все' 
+                ? PRODUCTS 
+                : PRODUCTS.filter(p => p.category === activeCategory);
+
+            return (
+                <div class="min-h-screen bg-gray-50 pb-20">
+                    {/* ХЕДЕР */}
+                    <header class="bg-gradient-to-r from-orange-500 to-orange-600 text-white sticky top-0 z-50 shadow-lg">
+                        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+                            <h1 class="text-2xl font-black tracking-tighter flex items-center gap-2 cursor-pointer">
+                                <span class="bg-white text-orange-600 p-1.5 rounded-xl shadow-inner text-xl">🍊</span>
+                                <span>NYASH.MARKET</span>
+                            </h1>
+                            <div class="flex items-center gap-4">
+                                <span class="hidden md:inline-block text-xs font-semibold bg-orange-700/40 px-3 py-1.5 rounded-full backdrop-blur-sm">
+                                    🚀 Быстрая доставка за 15–25 мин
+                                </span>
+                                <a href="#cart" class="bg-white text-orange-600 font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-md hover:bg-orange-50 active:scale-95 transition-all text-sm">
+                                    <span>Корзина</span>
+                                    {totalItems > 0 && (
+                                        <span class="bg-orange-600 text-white text-xs px-2 py-0.5 rounded-md">
+                                            {totalItems}
+                                        </span>
+                                    )}
+                                </a>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* ГЛАВНЫЙ КОНТЕНТ */}
+                    <main class="max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        
+                        {/* ЛЕНТА ТОВАРОВ И КАТЕГОРИЙ */}
+                        <div class="lg:col-span-2 space-y-8">
+                            
+                            {/* СЕТ ДНЯ (АКЦИЯ) */}
+                            <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-2 group hover:shadow-md transition-shadow">
+                                <div class="relative h-56 md:h-full min-h-[220px]">
+                                    <img src={SET_OF_THE_DAY.image} alt={SET_OF_THE_DAY.name} class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                    <div class="absolute top-3 left-3 bg-orange-500 text-white text-xs font-black px-3 py-1.5 rounded-lg uppercase tracking-wide shadow-md">
+                                        🔥 Сет Дня
+                                    </div>
+                                </div>
+                                <div class="p-6 flex flex-col justify-between space-y-4 bg-gradient-to-br from-white to-orange-50/20">
+                                    <div class="space-y-2">
+                                        <h3 class="text-2xl font-extrabold tracking-tight text-gray-900">{SET_OF_THE_DAY.name}</h3>
+                                        <p class="text-sm text-gray-500 leading-relaxed">{SET_OF_THE_DAY.desc}</p>
+                                    </div>
+                                    <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+                                        <div>
+                                            <span class="text-xs text-gray-400 line-through block">{SET_OF_THE_DAY.oldPrice} ₽</span>
+                                            <span class="text-2xl font-black text-orange-600">{SET_OF_THE_DAY.price} ₽</span>
+                                        </div>
+                                        {getProductCount(SET_OF_THE_DAY.id) === 0 ? (
+                                            <button onClick={() => addToCart(SET_OF_THE_DAY)} class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer text-sm">
+                                                Добавить
+                                            </button>
+                                        ) : (
+                                            <div class="flex items-center bg-orange-100 text-orange-600 rounded-xl font-bold border border-orange-200 p-1">
+                                                <button onClick={() => removeFromCart(SET_OF_THE_DAY.id)} class="px-3 py-1 text-lg hover:bg-white rounded-lg transition-colors">-</button>
+                                                <span class="px-3 text-sm">{getProductCount(SET_OF_THE_DAY.id)}</span>
+                                                <button onClick={() => addToCart(SET_OF_THE_DAY)} class="px-3 py-1 text-lg hover:bg-white rounded-lg transition-colors">+</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* СЕЛИКТОР КАТЕГОРИЙ */}
+                            <div class="flex gap-2 overflow-x-auto pb-3 scrollbar-none sticky top-[72px] bg-gray-50 py-2 z-40">
+                                {categories.map(cat => (
+                                    <button
+                                        key={cat}
+                                        onClick={() => setActiveCategory(cat)}
+                                        class={`px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all cursor-pointer ${
+                                            activeCategory === cat 
+                                                ? 'bg-orange-500 text-white shadow-md shadow-orange-100' 
+                                                : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200/60'
+                                        }`}
+                                    >
+                                        {cat}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* СЕТКА ТОВАРОВ */}
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                {filteredProducts.map(product => {
+                                    const count = getProductCount(product.id);
+                                    return (
+                                        <div key={product.id} class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow group">
+                                            <div class="relative h-44 overflow-hidden bg-gray-100">
+                                                <img src={product.image} alt={product.name} class="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300" />
+                                                <span class="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm text-[10px] font-bold px-2 py-0.5 rounded-md text-gray-500">
+                                                    {product.category}
+                                                </span>
+                                            </div>
+                                            <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+                                                <div class="space-y-1">
+                                                    <h4 class="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">{product.name}</h4>
+                                                    <p class="text-xs text-gray-400 line-clamp-2 leading-relaxed">{product.desc}</p>
+                                                </div>
+                                                <div class="flex justify-between items-center pt-2 border-t border-gray-50">
+                                                    <span class="font-extrabold text-lg text-gray-950">{product.price} ₽</span>
+                                                    
+                                                    {count === 0 ? (
+                                                        <button 
+                                                            onClick={() => addToCart(product)}
+                                                            class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer"
+                                                        >
+                                                            Утащить +
+                                                        </button>
+                                                    ) : (
+                                                        <div class="flex items-center bg-orange-50 text-orange-600 rounded-xl font-bold border border-orange-200 p-0.5">
+                                                            <button onClick={() => removeFromCart(product.id)} class="px-2.5 py-1 text-sm hover:bg-white rounded-lg transition-colors">-</button>
+                                                            <span class="px-2 text-xs">{count}</span>
+                                                            <button onClick={() => addToCart(product)} class="px-2.5 py-1 text-sm hover:bg-white rounded-lg transition-colors">+</button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* БОКОВАЯ КОРЗИНА И ОФОРМЛЕНИЕ */}
+                        <div id="cart" class="lg:col-span-1">
+                            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 sticky top-24 space-y-6">
+                                <h3 class="text-lg font-black text-gray-900 border-b pb-4 flex justify-between items-center">
+                                    <span>Ваш Корзина</span>
+                                    <span class="text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-md font-normal">{totalItems} шт.</span>
+                                </h3>
+
+                                {cart.length === 0 ? (
+                                    <div class="text-center py-12 text-gray-400 space-y-3">
+                                        <div class="text-4xl">🛒</div>
+                                        <p class="text-xs leading-relaxed">Внутри пока пусто.<br/>Выбирайте категории выше и добавляйте товары!</p>
+                                    </div>
+                                ) : (
+                                    <div class="space-y-4 max-h-72 overflow-y-auto pr-1 scrollbar-none">
+                                        {cart.map(item => (
+                                            <div key={item.id} class="flex justify-between items-center text-xs gap-3">
+                                                <img src={item.image} class="w-10 h-10 object-cover rounded-lg bg-gray-50" />
+                                                <div class="flex-1 min-w-0">
+                                                    <div class="font-bold text-gray-800 truncate">{item.name}</div>
+                                                    <div class="text-gray-400 mt-0.5">{item.price} ₽ × {item.count}</div>
+                                                </div>
+                                                <div class="flex items-center bg-gray-100 rounded-lg p-0.5 shrink-0">
+                                                    <button onClick={() => removeFromCart(item.id)} class="px-1.5 py-0.5 text-gray-500 hover:bg-white rounded-md font-bold">-</button>
+                                                    <span class="px-1.5 font-mono font-bold text-[11px]">{item.count}</span>
+                                                    <button onClick={() => addToCart(item)} class="px-1.5 py-0.5 text-gray-500 hover:bg-white rounded-md font-bold">+</button>
+                                                </div>
+                                                <div class="w-16 text-right font-extrabold text-gray-900 shrink-0">
+                                                    {item.price * item.count} ₽
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* ПРОМОКОД */}
+                                <div class="pt-4 border-t border-gray-100">
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">Промокод на скидку</label>
+                                    <div class="flex gap-2">
+                                        <input 
+                                            type="text" 
+                                            value={promoCode}
+                                            onChange={(e) => setPromoCode(e.target.value)}
+                                            placeholder="Код: NYASH" 
+                                            class="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs flex-1 focus:outline-none focus:border-orange-400 uppercase font-mono font-bold tracking-wide"
+                                        />
+                                        <button onClick={handleApplyPromo} class="bg-gray-900 hover:bg-gray-950 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer">
+                                            Применить
+                                        </button>
+                                    </div>
+                                    {promoError && <p class="text-[11px] text-red-500 mt-1.5 font-medium">❌ {promoError}</p>}
+                                    {promoSuccess && <p class="text-[11px] text-green-600 mt-1.5 font-medium">✓ {promoSuccess}</p>}
+                                </div>
+
+                                {/* ЧЕК / ИТОГО */}
+                                <div class="bg-gray-50/80 rounded-2xl p-4 space-y-2.5 text-xs font-semibold text-gray-500">
+                                    <div class="flex justify-between">
+                                        <span>Товары:</span>
+                                        <span class="text-gray-900">{subTotal} ₽</span>
+                                    </div>
+                                    {discount > 0 && (
+                                        <div class="flex justify-between text-green-600">
+                                            <span>Скидка по промокоду ({discount}%):</span>
+                                            <span>-{discountAmount} ₽</span>
+                                        </div>
+                                    )}
+                                    <div class="flex justify-between">
+                                        <span>Доставка:</span>
+                                        <span class="text-green-600 font-bold">Бесплатно всегда</span>
+                                    </div>
+                                    <div class="flex justify-between text-base font-black text-gray-900 pt-3 border-t border-dashed border-gray-200">
+                                        <span>К оплате:</span>
+                                        <span class="text-orange-600 text-lg">{finalTotal} ₽</span>
+                                    </div>
+                                </div>
+
+                                {/* ОФОРМЛЕНИЕ */}
+                                <button 
+                                    onClick={() => cart.length > 0 ? alert('Заказ улетел на кухню! Ждите курьера 🛵') : alert('Добавьте хотя бы один сочный товар!')}
+                                    class={`w-full font-bold py-4 rounded-xl shadow-lg transition-all text-center text-sm text-white cursor-pointer ${
+                                        cart.length > 0 
+                                            ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-100 hover:translate-y-[-1px]' 
+                                            : 'bg-gray-300 shadow-none cursor-not-allowed'
+                                    }`}
+                                >
+                                    Заказать доставку 🛵
+                                </button>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
