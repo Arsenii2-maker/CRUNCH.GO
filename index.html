@@ -8,11 +8,11 @@
     <!-- Стабильный Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Стабильный React 18 и ReactDOM (с crossorigin, чтобы браузер не блокировал глобальные переменные) -->
+    <!-- Стабильный React 18 и ReactDOM -->
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
     
-    <!-- Babel для компиляции JSX прямо на лету -->
+    <!-- Babel для компиляции JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
     <style>
@@ -27,34 +27,71 @@
     <script type="text/babel">
         const { useState } = React;
 
-        // БАЗА ДАННЫХ ТОВАРОВ CRUNCH.GO
+        // БАЗА ДАННЫХ ТОВАРОВ CRUNCH.GO (50 ПОЗИЦИЙ)
         const PRODUCTS = [
-            // --- БУРГЕРЫ ---
+            // --- БУРГЕРЫ (1-7) ---
             { id: 1, name: 'Бургер Шеф-Монстр', price: 450, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80', desc: 'Двойная мраморная говядина, плавленый чеддер, маринованный лук и фирменный BBQ-соус.' },
             { id: 2, name: 'Чикен Крисп Бургер', price: 340, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=600&q=80', desc: 'Хрустящее куриное филе в панировке, салат Айсберг и нежный майонезно-чесночный соус.' },
             { id: 3, name: 'BBQ Бекон Бургер', price: 490, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=600&q=80', desc: 'Котлета на гриле, хрустящий бекон, карамелизованный лук и подкопченный соус.' },
-            
-            // --- ПИЦЦА ---
-            { id: 4, name: 'Пицца Пепперони', price: 620, category: 'Пицца', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80', desc: 'Пикантная колбаска пепперони, много моцареллы, томатный соус, итальянские травы.' },
-            { id: 5, name: 'Пицца Четыре Сыра', price: 690, category: 'Пицца', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80', desc: 'Изысканное сочетание дорблю, пармезана, чеддера и нежной моцареллы со сливочным соусом.' },
-            { id: 6, name: 'Пицца Сливочная цыпочка', price: 580, category: 'Пицца', image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80', desc: 'Нежное куриное филе, томаты черри, моцарелла и чесночный соус альфредо.' },
+            { id: 4, name: 'Трюфельный Бургер', price: 520, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=600&q=80', desc: 'Мраморная говядина, сыр дорблю, руккола и изысканный соус на основе черного трюфеля.' },
+            { id: 5, name: 'Острый Халапеньо', price: 390, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80', desc: 'Котлета из говядины, острый перец халапеньо, сыр чеддер и жгучий соус чили.' },
+            { id: 6, name: 'Сырный Бро', price: 410, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=600&q=80', desc: 'Суперсырный бургер с моцареллой в панировке, чеддером и сливочно-сырным соусом.' },
+            { id: 7, name: 'Вегги Авокадо', price: 380, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1525059696034-4967a8e1dca2?auto=format&fit=crop&w=600&q=80', desc: 'Растительная котлета, ломтики спелого авокадо, томаты, шпинат и йогуртовый соус.' },
 
-            // --- СУШИ И РОЛЛЫ ---
-            { id: 7, name: 'Ролл Филадельфия Люкс', price: 550, category: 'Суши', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80', desc: 'Много свежего лосося, толстый слой творожного сыра, авокадо и огурец.' },
-            { id: 8, name: 'Запеченный ролл с креветкой', price: 480, category: 'Суши', image: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80', desc: 'Тигровая креветка, сливочный сыр, под нежной острой шапочкой из спайси-соуса.' },
+            // --- ПИЦЦА (8-14) ---
+            { id: 8, name: 'Пицца Пепперони', price: 620, category: 'Пицца', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80', desc: 'Пикантная колбаска пепперони, много моцареллы, томатный соус, итальянские травы.' },
+            { id: 9, name: 'Пицца Четыре Сыра', price: 690, category: 'Пицца', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80', desc: 'Изысканное сочетание дорблю, пармезана, чеддера и нежной моцареллы со сливочным соусом.' },
+            { id: 10, name: 'Пицца Сливочная цыпочка', price: 580, category: 'Пицца', image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80', desc: 'Нежное куриное филе, томаты черри, моцарелла и чесночный соус альфредо.' },
+            { id: 11, name: 'Пицца Маргарита', price: 490, category: 'Пицца', image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=600&q=80', desc: 'Классика с сочными томатами, увеличенной порцией моцареллы и соусом песто.' },
+            { id: 12, name: 'Пицца Мясной Пир', price: 750, category: 'Пицца', image: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=600&q=80', desc: 'Ветчина, бекон, баварские колбаски, пепперони, говяжий фарш и соус барбекю.' },
+            { id: 13, name: 'Пицца С грибами и трюфелем', price: 660, category: 'Пицца', image: 'https://images.unsplash.com/photo-1604917869287-3ae73c77e227?auto=format&fit=crop&w=600&q=80', desc: 'Шампиньоны, вешенки, моцарелла, белые грибы и капля ароматного трюфельного масла.' },
+            { id: 14, name: 'Пицца Барбекю с ананасом', price: 590, category: 'Пицца', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80', desc: 'Куриная грудка, сочные ананасы, моцарелла, томатный соус и сладковатый BBQ.' },
 
-            // --- ПРОДУКТЫ (МАРКЕТ) ---
-            { id: 9, name: 'Молоко отборное 3.2%', price: 95, category: 'Продукты', image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80', desc: 'Натуральное фермерское молоко пастеризованное, 930 мл.' },
-            { id: 10, name: 'Спелое Авокадо Хасс', price: 180, category: 'Продукты', image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80', desc: 'Идеально мягкое авокадо для ваших завтраков и салатов, 1 шт.' },
-            { id: 11, name: 'Яйца С0 куриные', price: 130, category: 'Продукты', image: 'https://images.unsplash.com/photo-1516448620398-c5f44bf9f441?auto=format&fit=crop&w=600&q=80', desc: 'Крупные фермерские яйца категории С0, 10 штук.' },
+            // --- СУШИ И РОЛЛЫ (15-21) ---
+            { id: 15, name: 'Ролл Филадельфия Люкс', price: 550, category: 'Суши', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80', desc: 'Много свежего лосося, толстый слой творожного сыра, авокадо и огурец.' },
+            { id: 16, name: 'Запеченный ролл с креветкой', price: 480, category: 'Суши', image: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80', desc: 'Тигровая креветка, сливочный сыр, под нежной острой шапочкой из спайси-соуса.' },
+            { id: 17, name: 'Калифорния в кунжуте', price: 420, category: 'Суши', image: 'https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=600&q=80', desc: 'Снежный краб, майонез, авокадо, огурец, обсыпанные обжаренным кунжутом.' },
+            { id: 18, name: 'Острый тунец спайси', price: 490, category: 'Суши', image: 'https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?auto=format&fit=crop&w=600&q=80', desc: 'Филе тунца Блюфин, зеленый лук, огурец и жгучий японский соус.' },
+            { id: 19, name: 'Темпура ролл с угрем', price: 530, category: 'Суши', image: 'https://images.unsplash.com/photo-1583623025817-d180a2221d0a?auto=format&fit=crop&w=600&q=80', desc: 'Копченый угорь, авокадо, унаги соус, обжаренный в хрустящей панировке темпура.' },
+            { id: 20, name: 'Маки с авокадо', price: 210, category: 'Суши', image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80', desc: 'Простой и легкий ролл со спелым авокадо и рисом в листах нори.' },
+            { id: 21, name: 'Дракон ролл', price: 590, category: 'Суши', image: 'https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?auto=format&fit=crop&w=600&q=80', desc: 'Ролл с сыром и креветкой внутри, укрытый слайсами угря и авокадо сверху.' },
 
-            // --- ВЫПЕЧКА И ДЕСЕРТЫ ---
-            { id: 12, name: 'Круассан классический', price: 140, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80', desc: 'Хрустящая слоеная выпечка на настоящем сливочном масле прямо из печи.' },
-            { id: 13, name: 'Пончик Шоколадный взрыв', price: 110, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=600&q=80', desc: 'Донат со сливочно-шоколадной начинкой и яркой глазурью.' },
+            // --- ЗАКУСКИ (22-27) ---
+            { id: 22, name: 'Картофель фри XL', price: 180, category: 'Закуски', image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80', desc: 'Золотистый, хрустящий картофель с крупной морской солью.' },
+            { id: 23, name: 'Куриные наггетсы (9 шт)', price: 195, category: 'Закуски', image: 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=80', desc: 'Нежное куриное филе в хрустящей оригинальной панировке.' },
+            { id: 24, name: 'Сырные палочки моцарелла', price: 240, category: 'Закуски', image: 'https://images.unsplash.com/photo-1531749668029-2db88e4b76ce?auto=format&fit=crop&w=600&q=80', desc: 'Тягучий сыр моцарелла в сухарях. Подаются горячими.' },
+            { id: 25, name: 'Луковые кольца', price: 160, category: 'Закуски', image: 'https://images.unsplash.com/photo-1639024471283-2bc7b3c6a267?auto=format&fit=crop&w=600&q=80', desc: 'Кольца репчатого лука в кляре, обжаренные во фритюре.' },
+            { id: 26, name: 'Куриные крылья BBQ', price: 290, category: 'Закуски', image: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?auto=format&fit=crop&w=600&q=80', desc: 'Сочные крылышки в пикантном глазированном соусе барбекю.' },
+            { id: 27, name: 'Креветки торпедо в кляре', price: 380, category: 'Закуски', image: 'https://images.unsplash.com/photo-1559742811-824289511f48?auto=format&fit=crop&w=600&q=80', desc: 'Крупные тигровые креветки в воздушной панировке панко.' },
 
-            // --- НАПИТКИ ---
-            { id: 14, name: 'Матча Латте на кокосовом', price: 260, category: 'Напитки', image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80', desc: 'Церемониальный японский чай матча с воздушной пенкой кокосового молока.' },
-            { id: 15, name: 'Свежевыжатый Апельсиновый сок', price: 220, category: 'Напитки', image: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=600&q=80', desc: '100% натуральный сок из спелых мандаринов и апельсинов, 300 мл.' }
+            // --- ПРОДУКТЫ / МАРКЕТ (28-35) ---
+            { id: 28, name: 'Молоко отборное 3.2%', price: 95, category: 'Продукты', image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80', desc: 'Натуральное фермерское молоко пастеризованное, 930 мл.' },
+            { id: 29, name: 'Спелое Авокадо Хасс', price: 180, category: 'Продукты', image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80', desc: 'Идеально мягкое авокадо для ваших завтраков и салатов, 1 шт.' },
+            { id: 30, name: 'Яйца С0 куриные', price: 130, category: 'Продукты', image: 'https://images.unsplash.com/photo-1516448620398-c5f44bf9f441?auto=format&fit=crop&w=600&q=80', desc: 'Крупные фермерские яйца категории С0, 10 штук.' },
+            { id: 31, name: 'Сливки 20% Клевер', price: 145, category: 'Продукты', image: 'https://images.unsplash.com/photo-1528750994873-39400f34ea3e?auto=format&fit=crop&w=600&q=80', desc: 'Питьевые стерилизованные сливки для добавления в кофе или соусы.' },
+            { id: 32, name: 'Сыр Творожный Hochland', price: 190, category: 'Продукты', image: 'https://images.unsplash.com/photo-1528750994873-39400f34ea3e?auto=format&fit=crop&w=600&q=80', desc: 'Нежный творожный сыр без добавок, отлично для бутербродов.' },
+            { id: 33, name: 'Спагетти Барилла', price: 115, category: 'Продукты', image: 'https://images.unsplash.com/photo-1551462147-ff29053bfc14?auto=format&fit=crop&w=600&q=80', desc: 'Макаронные изделия из твердых сортов пшеницы высшего качества.' },
+            { id: 34, name: 'Масло оливковое Extra V.', price: 540, category: 'Продукты', image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80', desc: 'Итальянское масло первого холодного отжима, идеальная заправка.' },
+            { id: 35, name: 'Томаты Черри в упаковке', price: 165, category: 'Продукты', image: 'https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&w=600&q=80', desc: 'Сладкие отборные томаты черри на ветке, 250г.' },
+
+            // --- ВЫПЕЧКА И ДЕСЕРТЫ (36-42) ---
+            { id: 36, name: 'Круассан классический', price: 140, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80', desc: 'Хрустящая слоеная выпечка на настоящем сливочном масле прямо из печи.' },
+            { id: 37, name: 'Пончик Шоколадный взрыв', price: 110, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=600&q=80', desc: 'Донат со сливочно-шоколадной начинкой и яркой глазурью.' },
+            { id: 38, name: 'Чизкейк Нью-Йорк', price: 240, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=80', desc: 'Классический нежный творожный торт на песочной подложке.' },
+            { id: 39, name: 'Синнабон с корицей', price: 180, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1509365465985-25d11c17e812?auto=format&fit=crop&w=600&q=80', desc: 'Ароматная булочка со шри-ланкийской корицей и сливочной помадкой.' },
+            { id: 40, name: 'Брауни шоколадный', price: 160, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80', desc: 'Американский десерт с влажной текстурой и насыщенным вкусом какао.' },
+            { id: 41, name: 'Макарон (набор 3 шт)', price: 220, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=600&q=80', desc: 'Миндальное французское печенье с начинками: малина, фисташка, манго.' },
+            { id: 42, name: 'Улитка с изюмом', price: 120, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=600&q=80', desc: 'Слоеная улитка с заварным кремом и отборным темным изюмом.' },
+
+            // --- НАПИТКИ (43-50) ---
+            { id: 43, name: 'Матча Латте на кокосовом', price: 260, category: 'Напитки', image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80', desc: 'Церемониальный японский чай матча с воздушной пенкой кокосового молока.' },
+            { id: 44, name: 'Свежевыжатый Апельсиновый сок', price: 220, category: 'Напитки', image: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=600&q=80', desc: '100% натуральный сок из спелых мандаринов и апельсинов, 300 мл.' },
+            { id: 45, name: 'Кока-Кола Классик 0.5', price: 110, category: 'Напитки', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=600&q=80', desc: 'Освежающий газированный напиток в стеклянной бутылке.' },
+            { id: 46, name: 'Домашний морс брусника', price: 130, category: 'Напитки', image: 'https://images.unsplash.com/photo-1497534446932-c925b458314e?auto=format&fit=crop&w=600&q=80', desc: 'Натуральный морс из лесной брусники собственного приготовления, 0.5 л.' },
+            { id: 47, name: 'Капучино XL', price: 190, category: 'Напитки', image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=600&q=80', desc: 'Классический кофейный напиток на основе эспрессо с пышной молочной пеной.' },
+            { id: 48, name: 'Лмонад Цитрус-Мята', price: 175, category: 'Напитки', image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80', desc: 'Крафтовый холодный лимонад с соком лимона, лайма и свежей мятой.' },
+            { id: 49, name: 'Вода без газа Сан-Бенедетто', price: 140, category: 'Напитки', image: 'https://images.unsplash.com/photo-1608885898957-a599fb1698d6?auto=format&fit=crop&w=600&q=80', desc: 'Премиальная минеральная столовая вода из итальянских источников, 0.5 л.' },
+            { id: 50, name: 'Холодный чай каркаде', price: 150, category: 'Напитки', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=600&q=80', desc: 'Освежающий рубиновый настой лепестков суданской розы с медом.' }
         ];
 
         const SET_OF_THE_DAY = {
@@ -87,6 +124,7 @@
             const removeFromCart = (productId) => {
                 setCart(prev => {
                     const existing = prev.find(item => item.id === productId);
+                    if (!existing) return prev;
                     if (existing.count === 1) {
                         return prev.filter(item => item.id !== productId);
                     }
@@ -101,8 +139,22 @@
 
             const totalItems = cart.reduce((sum, item) => sum + item.count, 0);
             const subTotal = cart.reduce((sum, item) => sum + (item.price * item.count), 0);
+            
+            // ДИНАМИЧЕСКИЙ РАСЧЕТ ДОСТАВКИ
+            // Если корзина пуста — доставка 0. Иначе: до 500р — 250р, до 1000р — 150р, от 1000р — Бесплатно.
+            let deliveryPrice = 0;
+            if (subTotal > 0) {
+                if (subTotal >= 1000) {
+                    deliveryPrice = 0;
+                } else if (subTotal >= 500) {
+                    deliveryPrice = 150;
+                } else {
+                    deliveryPrice = 250;
+                }
+            }
+
             const discountAmount = Math.round(subTotal * (discount / 100));
-            const finalTotal = subTotal - discountAmount;
+            const finalTotal = subTotal - discountAmount + deliveryPrice;
 
             const handleApplyPromo = () => {
                 if (promoCode.trim().toUpperCase() === 'CRUNCH20') {
@@ -116,7 +168,8 @@
                 }
             };
 
-            const categories = ['Все', 'Бургеры', 'Пицца', 'Суши', 'Продукты', 'Выпечка', 'Напитки'];
+            const categories = ['Все', 'Бургеры', 'Пицца', 'Суши', 'Закуски', 'Продукты', 'Выпечка', 'Напитки'];
+            
             const filteredProducts = activeCategory === 'Все' 
                 ? PRODUCTS 
                 : PRODUCTS.filter(p => p.category === activeCategory);
@@ -127,12 +180,17 @@
                     <header className="bg-gradient-to-r from-orange-500 to-orange-600 text-white sticky top-0 z-50 shadow-lg">
                         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
                             <h1 className="text-2xl font-black tracking-tighter flex items-center gap-2 cursor-pointer">
-                                <span className="bg-white text-orange-600 p-1.5 rounded-xl shadow-inner text-xl">🍊</span>
+                                {/* Заменили мандарин на SVG векторную иконку ресторанного колпака (символ еды) */}
+                                <span className="bg-white p-2 rounded-xl shadow-inner flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-orange-600">
+                                        <path d="M11.996 2.25a.75.75 0 0 1 .75.75v1.272a5.253 5.253 0 0 1 4.542 4.195 4.5 4.5 0 0 1 1.712 3.533c0 1.942-1.229 3.597-2.94 4.218l.04.482a2.25 2.25 0 0 1-2.242 2.437H10.14a2.25 2.25 0 0 1-2.242-2.437l.04-.482c-1.711-.62-2.94-2.276-2.94-4.218a4.5 4.5 0 0 1 1.712-3.533 5.253 5.253 0 0 1 4.532-4.194V3a.75.75 0 0 1 .755-.75ZM18 12a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3c0 .878.379 1.667 1 2.22A4.47 4.47 0 0 1 9.4 15h5.2c1.01 0 1.944-.336 2.7-1.12.338-.344.7-.72.7-1.66ZM9.398 16.5a5.955 5.955 0 0 0-1.558.83l-.04.482a.75.75 0 0 0 .747.813h6.906a.75.75 0 0 0 .747-.813l-.04-.482a5.955 5.955 0 0 0-1.558-.83H9.398Z" />
+                                    </svg>
+                                </span>
                                 <span>CRUNCH.GO</span>
                             </h1>
                             <div className="flex items-center gap-4">
                                 <span className="hidden md:inline-block text-xs font-semibold bg-orange-700/40 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                                    🚀 Быстрая доставка за 15–25 мин
+                                    🚀 Быстрая доставка из ресторанов и дарксторов
                                 </span>
                                 <a href="#cart" className="bg-white text-orange-600 font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-md hover:bg-orange-50 active:scale-95 transition-all text-sm">
                                     <span>Корзина</span>
@@ -152,7 +210,7 @@
                         {/* ЛЕНТА ТОВАРОВ И КАТЕГОРИЙ */}
                         <div className="lg:col-span-2 space-y-8">
                             
-                            {/* СЕТ ДНЯ (АКЦИЯ) */}
+                            {/* СЕТ ДНЯ */}
                             <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-2 group hover:shadow-md transition-shadow">
                                 <div className="relative h-56 md:h-full min-h-[220px]">
                                     <img src={SET_OF_THE_DAY.image} alt={SET_OF_THE_DAY.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -225,14 +283,15 @@
                                                     {count === 0 ? (
                                                         <button 
                                                             onClick={() => addToCart(product)}
+                                                            {/* Исправлено: теперь строго "В корзину" на русском языке */}
                                                             className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer"
                                                         >
-                                                            В korzinu +
+                                                            В корзину +
                                                         </button>
                                                     ) : (
-                                                        <div className="flex items-center bg-orange-50 text-orange-600 rounded-xl font-bold border border-orange-200 p-0.5">
+                                                        <div className="flex items-center bg-orange-55 text-orange-600 rounded-xl font-bold border border-orange-200 p-0.5">
                                                             <button onClick={() => removeFromCart(product.id)} className="px-2.5 py-1 text-sm hover:bg-white rounded-lg transition-colors">-</button>
-                                                            <span class="px-2 text-xs">{count}</span>
+                                                            <span className="px-2 text-xs">{count}</span>
                                                             <button onClick={() => addToCart(product)} className="px-2.5 py-1 text-sm hover:bg-white rounded-lg transition-colors">+</button>
                                                         </div>
                                                     )}
@@ -279,10 +338,25 @@
                                     </div>
                                 )}
 
+                                {/* ИНФОРМАЦИЯ О СТОИМОСТИ ДОСТАВКИ */}
+                                {subTotal > 0 && (
+                                    <div className="bg-orange-50 rounded-2xl p-3 border border-orange-100 text-[11px] text-orange-800 leading-normal">
+                                        <div className="font-bold mb-1">📊 Динамическая доставка:</div>
+                                        <div>• Заказ до 500 ₽ → <span className="font-bold">250 ₽</span></div>
+                                        <div>• Заказ от 500 ₽ → <span className="font-bold">150 ₽</span></div>
+                                        <div>• Заказ от 1000 ₽ → <span className="font-bold text-green-600">Бесплатно!</span></div>
+                                        {subTotal < 1000 && (
+                                            <div className="mt-2 text-gray-600 border-t border-orange-200/50 pt-1.5">
+                                                Добавь товаров еще на <span className="font-bold text-orange-600">{1000 - subTotal} ₽</span> для бесплатной доставки.
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
                                 {/* ПРОМОКОД */}
                                 <div className="pt-4 border-t border-gray-100">
                                     <label className="block text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">Промокод на скидку</label>
-                                    <div class="flex gap-2">
+                                    <div className="flex gap-2">
                                         <input 
                                             type="text" 
                                             value={promoCode}
@@ -310,9 +384,11 @@
                                             <span>-{discountAmount} ₽</span>
                                         </div>
                                     )}
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-between items-center">
                                         <span>Доставка:</span>
-                                        <span className="text-green-600 font-bold">Бесплатно всегда</span>
+                                        <span className={`font-bold ${deliveryPrice === 0 && subTotal > 0 ? 'text-green-600' : 'text-gray-900'}`}>
+                                            {subTotal === 0 ? '0 ₽' : deliveryPrice === 0 ? 'Бесплатно' : `${deliveryPrice} ₽`}
+                                        </span>
                                     </div>
                                     <div className="flex justify-between text-base font-black text-gray-900 pt-3 border-t border-dashed border-gray-200">
                                         <span>К оплате:</span>
@@ -338,7 +414,6 @@
             );
         }
 
-        // Чистый рендеринг для React 18
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
