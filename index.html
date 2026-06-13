@@ -30,9 +30,9 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
 
-        // ПОЛНАЯ БАЗА ДАННЫХ С ИСПРАВЛЕННЫМИ И ПРОВЕРЕННЫМИ ССЫЛКАМИ НА ФОТО
+        // ПОЛНАЯ БАЗА ДАННЫХ С ПРОВЕРЕННЫМИ И ВЕРИФИЦИРОВАННЫМИ ССЫЛКАМИ НА ФОТО
         const PRODUCTS = [
             // --- БУРГЕРЫ ---
             { id: 1, name: 'Бургер Шеф-Монстр', price: 450, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80', desc: 'Двойная мраморная говядина, плавленый чеддер, маринованный лук и фирменный BBQ-соус.', ccal: '840 ккал', configType: 'burgers' },
@@ -42,19 +42,19 @@
             { id: 5, name: 'Острый Халапеньо', price: 390, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80', desc: 'Котлета из говядины, острый перец халапеньо, сыр чеддер и жгучий соус чили.', ccal: '680 ккал', configType: 'burgers' },
 
             // --- ПИЦЦА ---
-            { id: 8, name: 'Пицца Пепперони', price: 620, category: 'Пицца', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80', desc: 'Пикантная колбаска пепперони, много моцареллы, томатный соус, italian травы.', ccal: '1100 ккал', configType: 'pizza' },
+            { id: 8, name: 'Пицца Пепперони', price: 620, category: 'Пицца', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80', desc: 'Пикантная колбаска пепперони, много моцареллы, томатный соус, итальяские травы.', ccal: '1100 ккал', configType: 'pizza' },
             { id: 9, name: 'Пицца Четыре Сыра', price: 690, category: 'Пицца', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80', desc: 'Изысканное сочетание дорблю, пармезана, чеддера и нежной моцареллы со сливочным соусом.', ccal: '1250 ккал', configType: 'pizza' },
             { id: 10, name: 'Пицца Сливочная цыпочка', price: 580, category: 'Пицца', image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80', desc: 'Нежное куриное филе, томаты черри, моцарелла и чесночный соус альфредо.', ccal: '1050 ккал', configType: 'pizza' },
 
             // --- СУШИ И РОЛЛЫ ---
-            { id: 15, name: 'Ролл Филадельфия Люкс', price: 550, category: 'Суши', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80', desc: 'Много свежего лосося, толстый слой творожного сыра, авокадо и огурец.', ccal: '380 ккал', configType: 'sushi' },
+            { id: 15, name: 'Ролл Филадельфия Люкс', price: 550, category: 'Sub', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80', desc: 'Много свежего лосося, толстый слой творожного сыра, авокадо и огурец.', ccal: '380 ккал', configType: 'sushi' },
             { id: 16, name: 'Запеченный ролл с креветкой', price: 480, category: 'Суши', image: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80', desc: 'Тигровая креветка, сливочный сыр, под нежной острой шапочкой из спайси-соуса.', ccal: '420 ккал', configType: 'sushi' },
             { id: 20, name: 'Маки с авокадо', price: 210, category: 'Суши', image: 'https://images.unsplash.com/photo-1582450871972-ab5ca641643d?auto=format&fit=crop&w=600&q=80', desc: 'Классический аккуратный маки-ролл со свежим спелым авокадо, завернутый в нори.', ccal: '180 ккал', configType: 'sushi' },
 
             // --- СУПЫ ---
             { id: 60, name: 'Том Ям с креветками', price: 490, category: 'Супы', image: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=600&q=80', desc: 'Острый тайский суп на кокосовом молоке с тигровыми креветками, грибами и кинзой. Подается с рисом.', ccal: '410 ккал', configType: 'soups' },
             { id: 61, name: 'Рамен с курицей тясю', price: 430, category: 'Супы', image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80', desc: 'Наваристый пшеничный суп с маринованной курочкой, бамбуком, яйцом адзитама и водорослями нори.', ccal: '580 ккал', configType: 'soups' },
-            { id: 62, name: 'Сливочный суп с лососем', price: 460, category: 'Супы', image: 'https://images.unsplash.com/photo-1547592165-e1d17fed6005?auto=format&fit=crop&w=600&q=80', desc: 'Нежный сливочно-рыбный суп с кусочками дикого лосося, зеленью и молодым картофелем.', ccal: '390 ккал', configType: 'soups' },
+            { id: 62, name: 'Сливочный суп с лососем', price: 460, category: 'Супы', image: 'https://images.unsplash.com/photo-1603105037880-880cd4edfb0d?auto=format&fit=crop&w=600&q=80', desc: 'Нежный сливочно-рыбный суп с кусочками дикого лосося, зеленью и молодым картофелем.', ccal: '390 ккал', configType: 'soups' },
 
             // --- ЗАКУСКИ ---
             { id: 22, name: 'Картофель фри XL', price: 180, category: 'Закуски', image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80', desc: 'Золотистый, хрустящий картофель с крупной морской солью.', ccal: '320 ккал', configType: null },
@@ -69,9 +69,9 @@
 
             // --- МАРКЕТ / ПРОДУКТЫ ---
             { id: 28, name: 'Молоко отборное 3.2%', price: 95, category: 'Продукты', image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80', desc: 'Натуральное фермерское молоко пастеризованное, 930 мл.', ccal: '60 ккал', configType: null },
-            { id: 31, name: 'Сливки 20% Клевер', price: 145, category: 'Продукты', image: 'https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?auto=format&fit=crop&w=600&q=80', desc: 'Питьевые густые сливки 20% жирности для кулинарных шедевров или добавления в кофе.', ccal: '205 ккал', configType: null },
-            { id: 32, name: 'Сыр Творожный Hochland', price: 190, category: 'Продукты', image: 'https://images.unsplash.com/photo-1634141426774-4b537f00f0aa?auto=format&fit=crop&w=600&q=80', desc: 'Сливочный нежный творожный сыр Хохланд в удобной пластиковой ванночке.', ccal: '240 ккал', configType: null },
-            { id: 35, name: 'Томаты Черри в упаковке', price: 165, category: 'Продукты', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80', desc: 'Свежие, сладкие и сочные маленькие помидоры черри, ветка в лотке.', ccal: '22 ккал', configType: null },
+            { id: 31, name: 'Сливки 20% Клевер', price: 145, category: 'Продукты', image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=600&q=80', desc: 'Питьевые нежные сливки 20% жирности для кулинарных шедевров или добавления в кофе.', ccal: '205 ккал', configType: null },
+            { id: 32, name: 'Сыр Творожный Hochland', price: 190, category: 'Продукты', image: 'https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=80', desc: 'Сливочный нежный творожный сыр Хохланд в удобной пластиковой ванночке.', ccal: '240 ккал', configType: null },
+            { id: 35, name: 'Томаты Черри в упаковке', price: 165, category: 'Продукты', image: 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=80', desc: 'Свежие, сладкие и сочные маленькие помидоры черри, ветка в лотке.', ccal: '22 ккал', configType: null },
 
             // --- ВЫПЕЧКА И ДЕСЕРТЫ ---
             { id: 36, name: 'Круассан классический', price: 140, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80', desc: 'Хрустящая слоеная выпечка на настоящем сливочном масле прямо из печи.', ccal: '310 ккал', configType: null },
@@ -79,17 +79,39 @@
 
             // --- НАПИТКИ ---
             { id: 45, name: 'Кока-Кола Классик 0.5', price: 110, category: 'Напитки', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=600&q=80', desc: 'Освежающий газированный напиток в стеклянной бутылке.', ccal: '210 ккал', configType: null },
-            { id: 49, name: 'Вода без газа Сан-Бенедетто', price: 140, category: 'Напитки', image: 'https://images.unsplash.com/photo-1608885898957-a599fb18de37?auto=format&fit=crop&w=600&q=80', desc: 'Элитная итальянская минеральная вода без газа San Benedetto в стекле.', ccal: '0 ккал', configType: null }
+            { id: 49, name: 'Вода без газа Сан-Бенедетто', price: 140, category: 'Напитки', image: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=600&q=80', desc: 'Элитная итальянская минеральная вода без газа San Benedetto.', ccal: '0 ккал', configType: null }
         ];
 
-        const SET_OF_THE_DAY = {
-            id: 100,
-            name: 'Гранд-Сет "Mega Mix"',
-            oldPrice: 1650,
-            price: 1190,
-            image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80',
-            desc: 'Пицца Пепперони + Бургер Шеф-Монстр + Большой картофель фри + Сок. Твой идеальный ужин!'
-        };
+        // МАССИВ СУПЕРАКЦИЙ ДЛЯ КАРУСЕЛИ
+        const PROMOTIONS = [
+            {
+                id: 100,
+                badge: '🔥 Хит Дня',
+                name: 'Гранд-Сет "Mega Mix"',
+                oldPrice: 1650,
+                price: 1190,
+                image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80',
+                desc: 'Пицца Пепперони + Бургер Шеф-Монстр + Большой картофель фри. Твой идеальный ужин!'
+            },
+            {
+                id: 101,
+                badge: '⚡ Суши Тайм',
+                name: 'Сет "Филадельфия Сплэш"',
+                oldPrice: 1240,
+                price: 890,
+                image: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=800&q=80',
+                desc: 'Ролл Филадельфия Люкс + Запеченный ролл с креветкой по мега-скидке.'
+            },
+            {
+                id: 102,
+                badge: '🥐 Комбо Завтрак',
+                name: 'Французское Утро',
+                oldPrice: 390,
+                price: 250,
+                image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80',
+                desc: 'Классический горячий круассан и отборные фермерские Сливки 20% к вашему кофе.'
+            }
+        ];
 
         const CUSTOM_CONFIGS = {
             burgers: {
@@ -134,11 +156,44 @@
             const [promoError, setPromoError] = useState('');
             const [promoSuccess, setPromoSuccess] = useState('');
 
+            // Слайдер Акций
+            const [currentSlide, setCurrentSlide] = useState(0);
+            const [touchStart, setTouchStart] = useState(0);
+            const [touchEnd, setTouchEnd] = useState(0);
+
             // Состояния кастомизатора
             const [selectedProduct, setSelectedProduct] = useState(null);
             const [removedItems, setRemovedItems] = useState([]);
             const [addedItems, setAddedItems] = useState([]);
             const [activeReceipt, setActiveReceipt] = useState(null);
+
+            // Автоматическая смена слайдов каждые 4 секунды
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setCurrentSlide((prev) => (prev + 1) % PROMOTIONS.length);
+                }, 4000);
+                return () => clearInterval(interval);
+            }, []);
+
+            // Обработка свайпов (Swipe)
+            const handleTouchStart = (e) => {
+                setTouchStart(e.targetTouches[0].clientX);
+            };
+
+            const handleTouchMove = (e) => {
+                setTouchEnd(e.targetTouches[0].clientX);
+            };
+
+            const handleTouchEnd = () => {
+                if (touchStart - touchEnd > 50) {
+                    // Свайп влево -> следующий слайд
+                    setCurrentSlide((prev) => (prev + 1) % PROMOTIONS.length);
+                }
+                if (touchStart - touchEnd < -50) {
+                    // Свайп вправо -> предыдущий слайд
+                    setCurrentSlide((prev) => (prev - 1 + PROMOTIONS.length) % PROMOTIONS.length);
+                }
+            };
 
             const openProductModal = (product) => {
                 if (!product.configType) return;
@@ -147,7 +202,6 @@
                 setAddedItems([]);
             };
 
-            // Добавление / увеличение стандартного блюда
             const addToCartSimple = (product) => {
                 setCart(prev => {
                     const existing = prev.find(item => item.id === product.id && !item.customKey);
@@ -158,7 +212,6 @@
                 });
             };
 
-            // Уменьшение количества / удаление из корзины и меню
             const removeFromCartSimple = (productId) => {
                 setCart(prev => {
                     const existing = prev.find(item => item.id === productId && !item.customKey);
@@ -170,13 +223,11 @@
                 });
             };
 
-            // Вспомогательная функция для получения количества обычного товара в корзине
             const getProductCountInCart = (productId) => {
                 const item = cart.find(i => i.id === productId && !i.customKey);
                 return item ? item.count : 0;
             };
 
-            // Добавление кастомизированной позиции
             const handleAddToCartCustomized = () => {
                 const extraCost = addedItems.reduce((sum, item) => sum + item.price, 0);
                 const finalItemPrice = selectedProduct.price + extraCost;
@@ -207,7 +258,6 @@
                 setSelectedProduct(null);
             };
 
-            // Логика удаления кастомных или обычных товаров из боковой панели корзины
             const removeFromCartByKey = (uniqueKey, isCustom = false) => {
                 setCart(prev => {
                     const existing = prev.find(item => isCustom ? item.customKey === uniqueKey : (item.id === uniqueKey && !item.customKey));
@@ -361,32 +411,59 @@
                         <main className="max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
                             <div className="lg:col-span-2 space-y-8">
                                 
-                                {/* СЕТ ДНЯ */}
-                                <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-2 group hover:shadow-md transition-shadow">
-                                    <div className="relative h-56 md:h-full min-h-[220px]">
-                                        <img src={SET_OF_THE_DAY.image} alt={SET_OF_THE_DAY.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                        <div className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-black px-3 py-1.5 rounded-lg uppercase tracking-wide">🔥 Сет Дня</div>
-                                    </div>
-                                    <div className="p-6 flex flex-col justify-between space-y-4 bg-gradient-to-br from-white to-orange-50/20">
-                                        <div className="space-y-2">
-                                            <h3 className="text-2xl font-extrabold text-gray-900">{SET_OF_THE_DAY.name}</h3>
-                                            <p className="text-sm text-gray-500 leading-relaxed">{SET_OF_THE_DAY.desc}</p>
-                                        </div>
-                                        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                                            <div>
-                                                <span className="text-xs text-gray-400 line-through block">{SET_OF_THE_DAY.oldPrice} ₽</span>
-                                                <span className="text-2xl font-black text-orange-600">{SET_OF_THE_DAY.price} ₽</span>
-                                            </div>
-                                            {getProductCountInCart(SET_OF_THE_DAY.id) > 0 ? (
-                                                <div className="flex items-center bg-orange-500 text-white rounded-xl p-1 select-none">
-                                                    <button onClick={() => removeFromCartSimple(SET_OF_THE_DAY.id)} className="px-3 py-1 font-bold text-lg hover:bg-orange-600 rounded-lg transition-colors cursor-pointer">-</button>
-                                                    <span className="px-3 font-bold text-sm min-w-[20px] text-center">{getProductCountInCart(SET_OF_THE_DAY.id)}</span>
-                                                    <button onClick={() => addToCartSimple(SET_OF_THE_DAY)} className="px-3 py-1 font-bold text-lg hover:bg-orange-600 rounded-lg transition-colors cursor-pointer">+</button>
+                                {/* СВАЙПАЕМЫЙ И АВТОМАТИЧЕСКИЙ СЛАЙДЕР АКЦИЙ */}
+                                <div 
+                                    className="relative bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 h-[260px] md:h-[220px] select-none touch-pan-y"
+                                    onTouchStart={handleTouchStart}
+                                    onTouchMove={handleTouchMove}
+                                    onTouchEnd={handleTouchEnd}
+                                >
+                                    <div 
+                                        className="flex h-full transition-transform duration-700 ease-in-out"
+                                        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                                    >
+                                        {PROMOTIONS.map((promo) => (
+                                            <div key={promo.id} className="w-full h-full shrink-0 grid grid-cols-1 md:grid-cols-2">
+                                                <div className="relative h-32 md:h-full">
+                                                    <img src={promo.image} alt={promo.name} className="absolute inset-0 w-full h-full object-cover" />
+                                                    <div className="absolute top-3 left-3 bg-orange-500 text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wide">
+                                                        {promo.badge}
+                                                    </div>
                                                 </div>
-                                            ) : (
-                                                <button onClick={() => addToCartSimple(SET_OF_THE_DAY)} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition-all text-sm cursor-pointer">Добавить +</button>
-                                            )}
-                                        </div>
+                                                <div className="p-5 flex flex-col justify-between space-y-2 bg-gradient-to-br from-white to-orange-50/10">
+                                                    <div>
+                                                        <h3 className="text-lg font-black text-gray-900 leading-tight">{promo.name}</h3>
+                                                        <p className="text-xs text-gray-400 mt-1 line-clamp-2 leading-relaxed">{promo.desc}</p>
+                                                    </div>
+                                                    <div className="flex items-center justify-between pt-2 border-t border-gray-50">
+                                                        <div>
+                                                            <span className="text-[10px] text-gray-400 line-through block">{promo.oldPrice} ₽</span>
+                                                            <span className="text-xl font-black text-orange-600">{promo.price} ₽</span>
+                                                        </div>
+                                                        {getProductCountInCart(promo.id) > 0 ? (
+                                                            <div className="flex items-center bg-orange-500 text-white rounded-xl p-0.5 shadow-sm">
+                                                                <button onClick={() => removeFromCartSimple(promo.id)} className="px-2 py-0.5 font-bold text-sm hover:bg-orange-600 rounded-lg cursor-pointer">-</button>
+                                                                <span className="px-2 font-bold text-xs min-w-[16px] text-center">{getProductCountInCart(promo.id)}</span>
+                                                                <button onClick={() => addToCartSimple(promo)} className="px-2 py-0.5 font-bold text-sm hover:bg-orange-600 rounded-lg cursor-pointer">+</button>
+                                                            </div>
+                                                        ) : (
+                                                            <button onClick={() => addToCartSimple(promo)} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md transition-all cursor-pointer">Добавить +</button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* ТОЧКИ / ИНДИКАТОРЫ СЛАЙДЕРА */}
+                                    <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-10">
+                                        {PROMOTIONS.map((_, idx) => (
+                                            <button 
+                                                key={idx} 
+                                                onClick={() => setCurrentSlide(idx)}
+                                                className={`h-1.5 rounded-full transition-all duration-300 ${currentSlide === idx ? 'w-4 bg-orange-500' : 'w-1.5 bg-gray-300'}`}
+                                            />
+                                        ))}
                                     </div>
                                 </div>
 
@@ -415,7 +492,7 @@
                                                     <div className="flex justify-between items-center pt-2 border-t border-gray-50">
                                                         <span className="font-extrabold text-lg text-gray-950">{product.price} ₽</span>
                                                         <div className="flex items-center gap-1.5">
-                                                            {/* ДИНАМИЧЕСКИЙ СЧЕТЧИК - 1 + В КАРТОЧКЕ МЕНЮ */}
+                                                            {/* ДИНАМИЧЕСКИЙ СЧЕТЧИК В МЕНЮ */}
                                                             {countInCart > 0 ? (
                                                                 <div className="flex items-center bg-orange-500 text-white rounded-xl p-0.5 select-none shadow-sm">
                                                                     <button onClick={() => removeFromCartSimple(product.id)} className="px-2.5 py-1 font-bold text-sm hover:bg-orange-600 rounded-lg cursor-pointer">-</button>
