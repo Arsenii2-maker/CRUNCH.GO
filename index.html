@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUNCH.GO — Доставка еды и продуктов</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- React 19 и ReactDOM -->
-    <script src="https://unpkg.com/react@19/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@19/umd/react-dom.development.js"></script>
-    <!-- Babel -->
+    
+    <!-- Стабильный Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Стабильный React 18 и ReactDOM (с crossorigin, чтобы браузер не блокировал глобальные переменные) -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    
+    <!-- Babel для компиляции JSX прямо на лету -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
     <style>
         .scrollbar-none::-webkit-scrollbar { display: none; }
         .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
@@ -23,7 +27,7 @@
     <script type="text/babel">
         const { useState } = React;
 
-        // БАЗА ДАННЫХ ТОВАРОВ
+        // БАЗА ДАННЫХ ТОВАРОВ CRUNCH.GO
         const PRODUCTS = [
             // --- БУРГЕРЫ ---
             { id: 1, name: 'Бургер Шеф-Монстр', price: 450, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80', desc: 'Двойная мраморная говядина, плавленый чеддер, маринованный лук и фирменный BBQ-соус.' },
@@ -31,7 +35,7 @@
             { id: 3, name: 'BBQ Бекон Бургер', price: 490, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=600&q=80', desc: 'Котлета на гриле, хрустящий бекон, карамелизованный лук и подкопченный соус.' },
             
             // --- ПИЦЦА ---
-            { id: 4, name: 'Пицца Пепперони', price: 620, category: 'Пицца', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80', desc: 'Пикантная колбаска пепперони, много моцареллы, томатный соус, italian травы.' },
+            { id: 4, name: 'Пицца Пепперони', price: 620, category: 'Пицца', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80', desc: 'Пикантная колбаска пепперони, много моцареллы, томатный соус, итальянские травы.' },
             { id: 5, name: 'Пицца Четыре Сыра', price: 690, category: 'Пицца', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80', desc: 'Изысканное сочетание дорблю, пармезана, чеддера и нежной моцареллы со сливочным соусом.' },
             { id: 6, name: 'Пицца Сливочная цыпочка', price: 580, category: 'Пицца', image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80', desc: 'Нежное куриное филе, томаты черри, моцарелла и чесночный соус альфредо.' },
 
@@ -118,22 +122,22 @@
                 : PRODUCTS.filter(p => p.category === activeCategory);
 
             return (
-                <div class="min-h-screen bg-gray-50 pb-20">
+                <div className="min-h-screen bg-gray-50 pb-20">
                     {/* ХЕДЕР */}
-                    <header class="bg-gradient-to-r from-orange-500 to-orange-600 text-white sticky top-0 z-50 shadow-lg">
-                        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-                            <h1 class="text-2xl font-black tracking-tighter flex items-center gap-2 cursor-pointer">
-                                <span class="bg-white text-orange-600 p-1.5 rounded-xl shadow-inner text-xl">🍊</span>
+                    <header className="bg-gradient-to-r from-orange-500 to-orange-600 text-white sticky top-0 z-50 shadow-lg">
+                        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+                            <h1 className="text-2xl font-black tracking-tighter flex items-center gap-2 cursor-pointer">
+                                <span className="bg-white text-orange-600 p-1.5 rounded-xl shadow-inner text-xl">🍊</span>
                                 <span>CRUNCH.GO</span>
                             </h1>
-                            <div class="flex items-center gap-4">
-                                <span class="hidden md:inline-block text-xs font-semibold bg-orange-700/40 px-3 py-1.5 rounded-full backdrop-blur-sm">
+                            <div className="flex items-center gap-4">
+                                <span className="hidden md:inline-block text-xs font-semibold bg-orange-700/40 px-3 py-1.5 rounded-full backdrop-blur-sm">
                                     🚀 Быстрая доставка за 15–25 мин
                                 </span>
-                                <a href="#cart" class="bg-white text-orange-600 font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-md hover:bg-orange-50 active:scale-95 transition-all text-sm">
+                                <a href="#cart" className="bg-white text-orange-600 font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-md hover:bg-orange-50 active:scale-95 transition-all text-sm">
                                     <span>Корзина</span>
                                     {totalItems > 0 && (
-                                        <span class="bg-orange-600 text-white text-xs px-2 py-0.5 rounded-md">
+                                        <span className="bg-orange-600 text-white text-xs px-2 py-0.5 rounded-md">
                                             {totalItems}
                                         </span>
                                     )}
@@ -143,38 +147,38 @@
                     </header>
 
                     {/* ГЛАВНЫЙ КОНТЕНТ */}
-                    <main class="max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <main className="max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
                         
                         {/* ЛЕНТА ТОВАРОВ И КАТЕГОРИЙ */}
-                        <div class="lg:col-span-2 space-y-8">
+                        <div className="lg:col-span-2 space-y-8">
                             
                             {/* СЕТ ДНЯ (АКЦИЯ) */}
-                            <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-2 group hover:shadow-md transition-shadow">
-                                <div class="relative h-56 md:h-full min-h-[220px]">
-                                    <img src={SET_OF_THE_DAY.image} alt={SET_OF_THE_DAY.name} class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                    <div class="absolute top-3 left-3 bg-orange-500 text-white text-xs font-black px-3 py-1.5 rounded-lg uppercase tracking-wide shadow-md">
+                            <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-2 group hover:shadow-md transition-shadow">
+                                <div className="relative h-56 md:h-full min-h-[220px]">
+                                    <img src={SET_OF_THE_DAY.image} alt={SET_OF_THE_DAY.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                    <div className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-black px-3 py-1.5 rounded-lg uppercase tracking-wide shadow-md">
                                         🔥 Сет Дня
                                     </div>
                                 </div>
-                                <div class="p-6 flex flex-col justify-between space-y-4 bg-gradient-to-br from-white to-orange-50/20">
-                                    <div class="space-y-2">
-                                        <h3 class="text-2xl font-extrabold tracking-tight text-gray-900">{SET_OF_THE_DAY.name}</h3>
-                                        <p class="text-sm text-gray-500 leading-relaxed">{SET_OF_THE_DAY.desc}</p>
+                                <div className="p-6 flex flex-col justify-between space-y-4 bg-gradient-to-br from-white to-orange-50/20">
+                                    <div className="space-y-2">
+                                        <h3 className="text-2xl font-extrabold tracking-tight text-gray-900">{SET_OF_THE_DAY.name}</h3>
+                                        <p className="text-sm text-gray-500 leading-relaxed">{SET_OF_THE_DAY.desc}</p>
                                     </div>
-                                    <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+                                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                                         <div>
-                                            <span class="text-xs text-gray-400 line-through block">{SET_OF_THE_DAY.oldPrice} ₽</span>
-                                            <span class="text-2xl font-black text-orange-600">{SET_OF_THE_DAY.price} ₽</span>
+                                            <span className="text-xs text-gray-400 line-through block">{SET_OF_THE_DAY.oldPrice} ₽</span>
+                                            <span className="text-2xl font-black text-orange-600">{SET_OF_THE_DAY.price} ₽</span>
                                         </div>
                                         {getProductCount(SET_OF_THE_DAY.id) === 0 ? (
-                                            <button onClick={() => addToCart(SET_OF_THE_DAY)} class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer text-sm">
+                                            <button onClick={() => addToCart(SET_OF_THE_DAY)} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer text-sm">
                                                 Добавить
                                             </button>
                                         ) : (
-                                            <div class="flex items-center bg-orange-100 text-orange-600 rounded-xl font-bold border border-orange-200 p-1">
-                                                <button onClick={() => removeFromCart(SET_OF_THE_DAY.id)} class="px-3 py-1 text-lg hover:bg-white rounded-lg transition-colors">-</button>
-                                                <span class="px-3 text-sm">{getProductCount(SET_OF_THE_DAY.id)}</span>
-                                                <button onClick={() => addToCart(SET_OF_THE_DAY)} class="px-3 py-1 text-lg hover:bg-white rounded-lg transition-colors">+</button>
+                                            <div className="flex items-center bg-orange-100 text-orange-600 rounded-xl font-bold border border-orange-200 p-1">
+                                                <button onClick={() => removeFromCart(SET_OF_THE_DAY.id)} className="px-3 py-1 text-lg hover:bg-white rounded-lg transition-colors">-</button>
+                                                <span className="px-3 text-sm">{getProductCount(SET_OF_THE_DAY.id)}</span>
+                                                <button onClick={() => addToCart(SET_OF_THE_DAY)} className="px-3 py-1 text-lg hover:bg-white rounded-lg transition-colors">+</button>
                                             </div>
                                         )}
                                     </div>
@@ -182,12 +186,12 @@
                             </div>
 
                             {/* СЕЛЕКТОР КАТЕГОРИЙ */}
-                            <div class="flex gap-2 overflow-x-auto pb-3 scrollbar-none sticky top-[72px] bg-gray-50 py-2 z-40">
+                            <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-none sticky top-[72px] bg-gray-50 py-2 z-40">
                                 {categories.map(cat => (
                                     <button
                                         key={cat}
                                         onClick={() => setActiveCategory(cat)}
-                                        class={`px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all cursor-pointer ${
+                                        className={`px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all cursor-pointer ${
                                             activeCategory === cat 
                                                 ? 'bg-orange-500 text-white shadow-md shadow-orange-100' 
                                                 : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200/60'
@@ -199,37 +203,37 @@
                             </div>
 
                             {/* СЕТКА ТОВАРОВ */}
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 {filteredProducts.map(product => {
                                     const count = getProductCount(product.id);
                                     return (
-                                        <div key={product.id} class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow group">
-                                            <div class="relative h-44 overflow-hidden bg-gray-100">
-                                                <img src={product.image} alt={product.name} class="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300" />
-                                                <span class="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm text-[10px] font-bold px-2 py-0.5 rounded-md text-gray-500">
+                                        <div key={product.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow group">
+                                            <div className="relative h-44 overflow-hidden bg-gray-100">
+                                                <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300" />
+                                                <span className="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm text-[10px] font-bold px-2 py-0.5 rounded-md text-gray-500">
                                                     {product.category}
                                                 </span>
                                             </div>
-                                            <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
-                                                <div class="space-y-1">
-                                                    <h4 class="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">{product.name}</h4>
-                                                    <p class="text-xs text-gray-400 line-clamp-2 leading-relaxed">{product.desc}</p>
+                                            <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                                                <div className="space-y-1">
+                                                    <h4 className="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">{product.name}</h4>
+                                                    <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">{product.desc}</p>
                                                 </div>
-                                                <div class="flex justify-between items-center pt-2 border-t border-gray-50">
-                                                    <span class="font-extrabold text-lg text-gray-950">{product.price} ₽</span>
+                                                <div className="flex justify-between items-center pt-2 border-t border-gray-50">
+                                                    <span className="font-extrabold text-lg text-gray-950">{product.price} ₽</span>
                                                     
                                                     {count === 0 ? (
                                                         <button 
                                                             onClick={() => addToCart(product)}
-                                                            class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer"
+                                                            className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer"
                                                         >
-                                                            В корзину +
+                                                            В korzinu +
                                                         </button>
                                                     ) : (
-                                                        <div class="flex items-center bg-orange-50 text-orange-600 rounded-xl font-bold border border-orange-200 p-0.5">
-                                                            <button onClick={() => removeFromCart(product.id)} class="px-2.5 py-1 text-sm hover:bg-white rounded-lg transition-colors">-</button>
+                                                        <div className="flex items-center bg-orange-50 text-orange-600 rounded-xl font-bold border border-orange-200 p-0.5">
+                                                            <button onClick={() => removeFromCart(product.id)} className="px-2.5 py-1 text-sm hover:bg-white rounded-lg transition-colors">-</button>
                                                             <span class="px-2 text-xs">{count}</span>
-                                                            <button onClick={() => addToCart(product)} class="px-2.5 py-1 text-sm hover:bg-white rounded-lg transition-colors">+</button>
+                                                            <button onClick={() => addToCart(product)} className="px-2.5 py-1 text-sm hover:bg-white rounded-lg transition-colors">+</button>
                                                         </div>
                                                     )}
                                                 </div>
@@ -241,33 +245,33 @@
                         </div>
 
                         {/* БОКОВАЯ КОРЗИНА И ОФОРМЛЕНИЕ */}
-                        <div id="cart" class="lg:col-span-1">
-                            <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 sticky top-24 space-y-6">
-                                <h3 class="text-lg font-black text-gray-900 border-b pb-4 flex justify-between items-center">
+                        <div id="cart" className="lg:col-span-1">
+                            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 sticky top-24 space-y-6">
+                                <h3 className="text-lg font-black text-gray-900 border-b pb-4 flex justify-between items-center">
                                     <span>Корзина</span>
-                                    <span class="text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-md font-normal">{totalItems} шт.</span>
+                                    <span className="text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-md font-normal">{totalItems} шт.</span>
                                 </h3>
 
                                 {cart.length === 0 ? (
-                                    <div class="text-center py-12 text-gray-400 space-y-3">
-                                        <div class="text-4xl">🛒</div>
-                                        <p class="text-xs leading-relaxed">Внутри пока пусто.<br/>Выбирайте категории выше и добавляйте товары!</p>
+                                    <div className="text-center py-12 text-gray-400 space-y-3">
+                                        <div className="text-4xl">🛒</div>
+                                        <p className="text-xs leading-relaxed">Внутри пока пусто.<br/>Выбирайте категории выше и добавляйте товары!</p>
                                     </div>
                                 ) : (
-                                    <div class="space-y-4 max-h-72 overflow-y-auto pr-1 scrollbar-none">
+                                    <div className="space-y-4 max-h-72 overflow-y-auto pr-1 scrollbar-none">
                                         {cart.map(item => (
-                                            <div key={item.id} class="flex justify-between items-center text-xs gap-3">
-                                                <img src={item.image} class="w-10 h-10 object-cover rounded-lg bg-gray-50" />
-                                                <div class="flex-1 min-w-0">
-                                                    <div class="font-bold text-gray-800 truncate">{item.name}</div>
-                                                    <div class="text-gray-400 mt-0.5">{item.price} ₽ × {item.count}</div>
+                                            <div key={item.id} className="flex justify-between items-center text-xs gap-3">
+                                                <img src={item.image} className="w-10 h-10 object-cover rounded-lg bg-gray-50" />
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="font-bold text-gray-800 truncate">{item.name}</div>
+                                                    <div className="text-gray-400 mt-0.5">{item.price} ₽ × {item.count}</div>
                                                 </div>
-                                                <div class="flex items-center bg-gray-100 rounded-lg p-0.5 shrink-0">
-                                                    <button onClick={() => removeFromCart(item.id)} class="px-1.5 py-0.5 text-gray-500 hover:bg-white rounded-md font-bold">-</button>
-                                                    <span class="px-1.5 font-mono font-bold text-[11px]">{item.count}</span>
-                                                    <button onClick={() => addToCart(item)} class="px-1.5 py-0.5 text-gray-500 hover:bg-white rounded-md font-bold">+</button>
+                                                <div className="flex items-center bg-gray-100 rounded-lg p-0.5 shrink-0">
+                                                    <button onClick={() => removeFromCart(item.id)} className="px-1.5 py-0.5 text-gray-500 hover:bg-white rounded-md font-bold">-</button>
+                                                    <span className="px-1.5 font-mono font-bold text-[11px]">{item.count}</span>
+                                                    <button onClick={() => addToCart(item)} className="px-1.5 py-0.5 text-gray-500 hover:bg-white rounded-md font-bold">+</button>
                                                 </div>
-                                                <div class="w-16 text-right font-extrabold text-gray-900 shrink-0">
+                                                <div className="w-16 text-right font-extrabold text-gray-900 shrink-0">
                                                     {item.price * item.count} ₽
                                                 </div>
                                             </div>
@@ -276,50 +280,50 @@
                                 )}
 
                                 {/* ПРОМОКОД */}
-                                <div class="pt-4 border-t border-gray-100">
-                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">Промокод на скидку</label>
+                                <div className="pt-4 border-t border-gray-100">
+                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">Промокод на скидку</label>
                                     <div class="flex gap-2">
                                         <input 
                                             type="text" 
                                             value={promoCode}
                                             onChange={(e) => setPromoCode(e.target.value)}
                                             placeholder="Код: CRUNCH20" 
-                                            class="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs flex-1 focus:outline-none focus:border-orange-400 uppercase font-mono font-bold tracking-wide"
+                                            className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs flex-1 focus:outline-none focus:border-orange-400 uppercase font-mono font-bold tracking-wide"
                                         />
-                                        <button onClick={handleApplyPromo} class="bg-gray-900 hover:bg-gray-950 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer">
+                                        <button onClick={handleApplyPromo} className="bg-gray-900 hover:bg-gray-950 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer">
                                             Ок
                                         </button>
                                     </div>
-                                    {promoError && <p class="text-[11px] text-red-500 mt-1.5 font-medium">❌ {promoError}</p>}
-                                    {promoSuccess && <p class="text-[11px] text-green-600 mt-1.5 font-medium">✓ {promoSuccess}</p>}
+                                    {promoError && <p className="text-[11px] text-red-500 mt-1.5 font-medium">❌ {promoError}</p>}
+                                    {promoSuccess && <p className="text-[11px] text-green-600 mt-1.5 font-medium">✓ {promoSuccess}</p>}
                                 </div>
 
                                 {/* ЧЕК / ИТОГО */}
-                                <div class="bg-gray-50/80 rounded-2xl p-4 space-y-2.5 text-xs font-semibold text-gray-500">
-                                    <div class="flex justify-between">
+                                <div className="bg-gray-50/80 rounded-2xl p-4 space-y-2.5 text-xs font-semibold text-gray-500">
+                                    <div className="flex justify-between">
                                         <span>Товары:</span>
-                                        <span class="text-gray-900">{subTotal} ₽</span>
+                                        <span className="text-gray-900">{subTotal} ₽</span>
                                     </div>
                                     {discount > 0 && (
-                                        <div class="flex justify-between text-green-600">
+                                        <div className="flex justify-between text-green-600">
                                             <span>Скидка ({discount}%):</span>
                                             <span>-{discountAmount} ₽</span>
                                         </div>
                                     )}
-                                    <div class="flex justify-between">
+                                    <div className="flex justify-between">
                                         <span>Доставка:</span>
-                                        <span class="text-green-600 font-bold">Бесплатно всегда</span>
+                                        <span className="text-green-600 font-bold">Бесплатно всегда</span>
                                     </div>
-                                    <div class="flex justify-between text-base font-black text-gray-900 pt-3 border-t border-dashed border-gray-200">
+                                    <div className="flex justify-between text-base font-black text-gray-900 pt-3 border-t border-dashed border-gray-200">
                                         <span>К оплате:</span>
-                                        <span class="text-orange-600 text-lg">{finalTotal} ₽</span>
+                                        <span className="text-orange-600 text-lg">{finalTotal} ₽</span>
                                     </div>
                                 </div>
 
                                 {/* ОФОРМЛЕНИЕ */}
                                 <button 
                                     onClick={() => cart.length > 0 ? alert('Заказ оформлен! Еда уже готовится 🚀') : alert('Добавьте товары в корзину!')}
-                                    class={`w-full font-bold py-4 rounded-xl shadow-lg transition-all text-center text-sm text-white cursor-pointer ${
+                                    className={`w-full font-bold py-4 rounded-xl shadow-lg transition-all text-center text-sm text-white cursor-pointer ${
                                         cart.length > 0 
                                             ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-100 hover:translate-y-[-1px]' 
                                             : 'bg-gray-300 shadow-none cursor-not-allowed'
@@ -334,6 +338,7 @@
             );
         }
 
+        // Чистый рендеринг для React 18
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
