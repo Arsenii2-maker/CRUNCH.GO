@@ -23,7 +23,7 @@
     <script type="text/babel">
         const { useState } = React;
 
-        // РАСШИРЕННАЯ БАЗА ДАННЫХ С РЕАЛЬНЫМИ ФОТОГРАФИЯМИ
+        // БАЗА ДАННЫХ ТОВАРОВ
         const PRODUCTS = [
             // --- БУРГЕРЫ ---
             { id: 1, name: 'Бургер Шеф-Монстр', price: 450, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80', desc: 'Двойная мраморная говядина, плавленый чеддер, маринованный лук и фирменный BBQ-соус.' },
@@ -31,7 +31,7 @@
             { id: 3, name: 'BBQ Бекон Бургер', price: 490, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=600&q=80', desc: 'Котлета на гриле, хрустящий бекон, карамелизованный лук и подкопченный соус.' },
             
             // --- ПИЦЦА ---
-            { id: 4, name: 'Пицца Пепперони', price: 620, category: 'Пицца', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80', desc: 'Пикантная колбаска пепперони, много моцареллы, томатный соус, итальянские травы.' },
+            { id: 4, name: 'Пицца Пепперони', price: 620, category: 'Пицца', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80', desc: 'Пикантная колбаска пепперони, много моцареллы, томатный соус, italian травы.' },
             { id: 5, name: 'Пицца Четыре Сыра', price: 690, category: 'Пицца', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80', desc: 'Изысканное сочетание дорблю, пармезана, чеддера и нежной моцареллы со сливочным соусом.' },
             { id: 6, name: 'Пицца Сливочная цыпочка', price: 580, category: 'Пицца', image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80', desc: 'Нежное куриное филе, томаты черри, моцарелла и чесночный соус альфредо.' },
 
@@ -55,7 +55,7 @@
 
         const SET_OF_THE_DAY = {
             id: 100,
-            name: 'Гранд-Сет "Мега Микс"',
+            name: 'Гранд-Сет "Mega Mix"',
             oldPrice: 1650,
             price: 1190,
             image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80',
@@ -101,12 +101,12 @@
             const finalTotal = subTotal - discountAmount;
 
             const handleApplyPromo = () => {
-                if (promoCode.trim().toUpperCase() === 'NYASH') {
+                if (promoCode.trim().toUpperCase() === 'CRUNCH20') {
                     setDiscount(20);
                     setPromoSuccess('Промокод применен! -20% 🔥');
                     setPromoError('');
                 } else {
-                    setPromoError('Неверный код. Попробуйте NYASH');
+                    setPromoError('Неверный код. Попробуйте CRUNCH20');
                     setPromoSuccess('');
                     setDiscount(0);
                 }
@@ -124,7 +124,7 @@
                         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
                             <h1 class="text-2xl font-black tracking-tighter flex items-center gap-2 cursor-pointer">
                                 <span class="bg-white text-orange-600 p-1.5 rounded-xl shadow-inner text-xl">🍊</span>
-                                <span>NYASH.MARKET</span>
+                                <span>CRUNCH.GO</span>
                             </h1>
                             <div class="flex items-center gap-4">
                                 <span class="hidden md:inline-block text-xs font-semibold bg-orange-700/40 px-3 py-1.5 rounded-full backdrop-blur-sm">
@@ -181,7 +181,7 @@
                                 </div>
                             </div>
 
-                            {/* СЕЛИКТОР КАТЕГОРИЙ */}
+                            {/* СЕЛЕКТОР КАТЕГОРИЙ */}
                             <div class="flex gap-2 overflow-x-auto pb-3 scrollbar-none sticky top-[72px] bg-gray-50 py-2 z-40">
                                 {categories.map(cat => (
                                     <button
@@ -223,7 +223,7 @@
                                                             onClick={() => addToCart(product)}
                                                             class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer"
                                                         >
-                                                            Утащить +
+                                                            В корзину +
                                                         </button>
                                                     ) : (
                                                         <div class="flex items-center bg-orange-50 text-orange-600 rounded-xl font-bold border border-orange-200 p-0.5">
@@ -244,7 +244,7 @@
                         <div id="cart" class="lg:col-span-1">
                             <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 sticky top-24 space-y-6">
                                 <h3 class="text-lg font-black text-gray-900 border-b pb-4 flex justify-between items-center">
-                                    <span>Ваш Корзина</span>
+                                    <span>Корзина</span>
                                     <span class="text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-md font-normal">{totalItems} шт.</span>
                                 </h3>
 
@@ -283,11 +283,11 @@
                                             type="text" 
                                             value={promoCode}
                                             onChange={(e) => setPromoCode(e.target.value)}
-                                            placeholder="Код: NYASH" 
+                                            placeholder="Код: CRUNCH20" 
                                             class="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs flex-1 focus:outline-none focus:border-orange-400 uppercase font-mono font-bold tracking-wide"
                                         />
                                         <button onClick={handleApplyPromo} class="bg-gray-900 hover:bg-gray-950 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer">
-                                            Применить
+                                            Ок
                                         </button>
                                     </div>
                                     {promoError && <p class="text-[11px] text-red-500 mt-1.5 font-medium">❌ {promoError}</p>}
@@ -302,7 +302,7 @@
                                     </div>
                                     {discount > 0 && (
                                         <div class="flex justify-between text-green-600">
-                                            <span>Скидка по промокоду ({discount}%):</span>
+                                            <span>Скидка ({discount}%):</span>
                                             <span>-{discountAmount} ₽</span>
                                         </div>
                                     )}
@@ -318,14 +318,14 @@
 
                                 {/* ОФОРМЛЕНИЕ */}
                                 <button 
-                                    onClick={() => cart.length > 0 ? alert('Заказ улетел на кухню! Ждите курьера 🛵') : alert('Добавьте хотя бы один сочный товар!')}
+                                    onClick={() => cart.length > 0 ? alert('Заказ оформлен! Еда уже готовится 🚀') : alert('Добавьте товары в корзину!')}
                                     class={`w-full font-bold py-4 rounded-xl shadow-lg transition-all text-center text-sm text-white cursor-pointer ${
                                         cart.length > 0 
                                             ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-100 hover:translate-y-[-1px]' 
                                             : 'bg-gray-300 shadow-none cursor-not-allowed'
                                     }`}
                                 >
-                                    Заказать доставку 🛵
+                                    Заказать доставку 🚀
                                 </button>
                             </div>
                         </div>
