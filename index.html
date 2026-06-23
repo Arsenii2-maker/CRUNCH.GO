@@ -5,15 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUNCH.GO — Доставка еды и продуктов</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- React 17 (работает стабильнее с Babel) -->
-    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel Standalone 6 (старая версия, но стабильная) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.4/babel.min.js"></script>
     
     <style>
         .scrollbar-none::-webkit-scrollbar { display: none; }
@@ -26,92 +21,49 @@
         .group-hover\:scale-105:hover { transform: scale(1.05); }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans selection:bg-orange-500 selection:text-white">
+<body class="bg-gray-50 text-gray-800 font-sans">
 
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // ВЕРИФИЦИРОВАННАЯ БАЗА ДАННЫХ КАРТИНОК
         const PRODUCTS = [
-            // --- БУРГЕРЫ ---
             { id: 1, name: 'Бургер Шеф-Монстр', price: 450, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80', desc: 'Двойная мраморная говядина, плавленый чеддер, маринованный лук и фирменный BBQ-соус.', ccal: '840 ккал', configType: 'burgers' },
             { id: 2, name: 'Чикен Крисп Бургер', price: 340, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?auto=format&fit=crop&w=600&q=80', desc: 'Хрустящее куриное филе в панировке, салат Айсберг и нежный майонезно-чесночный соус.', ccal: '610 ккал', configType: 'burgers' },
             { id: 3, name: 'BBQ Бекон Бургер', price: 490, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=600&q=80', desc: 'Котлета на гриле, хрустящий бекон, карамелизованный лук и подкопченный соус.', ccal: '790 ккал', configType: 'burgers' },
             { id: 4, name: 'Трюфельный Бургер', price: 520, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=600&q=80', desc: 'Мраморная говядина, сыр дорблю, руккола и изысканный соус на основе черного трюфеля.', ccal: '720 ккал', configType: 'burgers' },
             { id: 5, name: 'Острый Халапеньо', price: 390, category: 'Бургеры', image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=600&q=80', desc: 'Котлета из говядины, острый перец халапеньо, сыр чеддер и жгучий соус чили.', ccal: '680 ккал', configType: 'burgers' },
-
-            // --- ПИЦЦА ---
             { id: 8, name: 'Пицца Пепперони', price: 620, category: 'Пицца', image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80', desc: 'Пикантная колбаска пепперони, много моцареллы, томатный соус, итальяские травы.', ccal: '1100 ккал', configType: 'pizza' },
             { id: 9, name: 'Пицца Четыре Сыра', price: 690, category: 'Пицца', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80', desc: 'Изысканное сочетание дорблю, пармезана, чеддера и нежной моцареллы со сливочным соусом.', ccal: '1250 ккал', configType: 'pizza' },
             { id: 10, name: 'Пицца Сливочная цыпочка', price: 580, category: 'Пицца', image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80', desc: 'Нежное куриное филе, томаты черри, моцарелла и чесночный соус альфредо.', ccal: '1050 ккал', configType: 'pizza' },
-
-            // --- СУШИ И РОЛЛЫ ---
             { id: 15, name: 'Ролл Филадельфия Люкс', price: 550, category: 'Суши', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80', desc: 'Много свежего лосося, толстый слой творожного сыра, авокадо и огурец.', ccal: '380 ккал', configType: 'sushi' },
             { id: 16, name: 'Запеченный ролл с креветкой', price: 480, category: 'Суши', image: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80', desc: 'Тигровая креветка, сливочный сыр, под нежной острой шапочкой из спайси-соуса.', ccal: '420 ккал', configType: 'sushi' },
             { id: 20, name: 'Маки с авокадо', price: 210, category: 'Суши', image: 'https://images.unsplash.com/photo-1582450871972-ab5ca641643d?auto=format&fit=crop&w=600&q=80', desc: 'Классический аккуратный маки-ролл со свежим спелым авокадо, завернутый в нори.', ccal: '180 ккал', configType: 'sushi' },
-
-            // --- СУПЫ ---
             { id: 60, name: 'Том Ям с креветками', price: 490, category: 'Супы', image: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=600&q=80', desc: 'Острый тайский суп на кокосовом молоке с тигровыми креветками, грибами и кинзой. Подается с рисом.', ccal: '410 ккал', configType: 'soups' },
             { id: 61, name: 'Рамен с курицей тясю', price: 430, category: 'Супы', image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80', desc: 'Наваристый пшеничный суп с маринованной курочкой, бамбуком, яйцом адзитама и водорослями нори.', ccal: '580 ккал', configType: 'soups' },
             { id: 62, name: 'Сливочный суп с лососем', price: 460, category: 'Супы', image: 'https://images.unsplash.com/photo-1603105037880-880cd4edfb0d?auto=format&fit=crop&w=600&q=80', desc: 'Нежный сливочно-рыбный суп с кусочками дикого лосося, зеленью и молодым картофелем.', ccal: '390 ккал', configType: 'soups' },
-
-            // --- ЗАКУСКИ ---
             { id: 22, name: 'Картофель фри XL', price: 180, category: 'Закуски', image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80', desc: 'Золотистый, хрустящий картофель с крупной морской солью.', ccal: '320 ккал', configType: null },
             { id: 24, name: 'Сырные палочки моцарелла', price: 240, category: 'Закуски', image: 'https://images.unsplash.com/photo-1548340748-6d2b7d7da280?auto=format&fit=crop&w=600&q=80', desc: 'Тягучий нежный сыр моцарелла в хрустящей золотистой панировке со специями.', ccal: '390 ккал', configType: null },
             { id: 25, name: 'Луковые кольца', price: 160, category: 'Закуски', image: 'https://images.unsplash.com/photo-1639024471283-2bc7b3c6a267?auto=format&fit=crop&w=600&q=80', desc: 'Золотистые хрустящие луковые кольца во фритюре — идеальная горячая закуска.', ccal: '210 ккал', configType: null },
             { id: 26, name: 'Куриные крылья BBQ', price: 290, category: 'Закуски', image: 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=600&q=80', desc: 'Сочные, пикантные глазированные куриные крылышки, обжаренные в соусе барбекю.', ccal: '420 ккал', configType: null },
             { id: 27, name: 'Креветки торпедо в кляре', price: 380, category: 'Закуски', image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80', desc: 'Крупные королевские креветки в хрустящей вытянутой панировке панко.', ccal: '310 ккал', configType: null },
-
-            // --- КОМБО ---
             { id: 70, name: 'Комбо На Двоих: Бургеры', price: 820, category: 'Комбо', image: 'https://images.unsplash.com/photo-1610614819513-58e34989848b?auto=format&fit=crop&w=600&q=80', desc: 'Два классических чикен-бургера, порция Картофеля Фри XL и две бутылочки Колы.', ccal: '1420 ккал', configType: null },
             { id: 71, name: 'Комбо Итальяно', price: 990, category: 'Комбо', image: 'https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=600&q=80', desc: 'Пицца Пепперони, Пицца Маргарита и большой Литр фирменного морса.', ccal: '1980 ккал', configType: null },
-
-            // --- МАРКЕТ / ПРОДУКТЫ ---
             { id: 28, name: 'Молоко отборное 3.2%', price: 95, category: 'Продукты', image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80', desc: 'Натуральное фермерское молоко пастеризованное, 930 мл.', ccal: '60 ккал', configType: null },
             { id: 31, name: 'Сливки 20% Клевер', price: 145, category: 'Продукты', image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=600&q=80', desc: 'Питьевые нежные сливки 20% жирности для кулинарных шедевров или добавления в кофе.', ccal: '205 ккал', configType: null },
             { id: 32, name: 'Сыр Творожный Hochland', price: 190, category: 'Продукты', image: 'https://images.unsplash.com/photo-1384351332709-a78c1875f502?auto=format&fit=crop&w=600&q=80', desc: 'Сливочный нежный творожный сыр Хохланд в удобной пластиковой ванночке.', ccal: '240 ккал', configType: null },
             { id: 35, name: 'Томаты Черри в упаковке', price: 165, category: 'Продукты', image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80', desc: 'Свежие, сладкие и сочные маленькие помидоры черри, ветка в лотке.', ccal: '22 ккал', configType: null },
-
-            // --- ВЫПЕЧКА И ДЕСЕРТЫ ---
             { id: 36, name: 'Круассан классический', price: 140, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80', desc: 'Хрустящая слоеная выпечка на настоящем сливочном масле прямо из печи.', ccal: '310 ккал', configType: null },
             { id: 38, name: 'Чизкейк Нью-Йорк', price: 240, category: 'Выпечка', image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=80', desc: 'Классический нежный творожный торт на песочной подложке.', ccal: '420 ккал', configType: null },
-
-            // --- НАПИТКИ ---
             { id: 45, name: 'Кока-Кола Классик 0.5', price: 110, category: 'Напитки', image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=600&q=80', desc: 'Освежающий газированный напиток в стеклянной бутылке.', ccal: '210 ккал', configType: null },
             { id: 49, name: 'Вода без газа Сан-Бенедетто', price: 140, category: 'Напитки', image: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=600&q=80', desc: 'Элитная итальянская минеральная вода без газа San Benedetto.', ccal: '0 ккал', configType: null }
         ];
 
-        // КАРУСЕЛЬ АКЦИЙ
         const PROMOTIONS = [
-            {
-                id: 100,
-                badge: '🔥 Хит Дня',
-                name: 'Гранд-Сет "Mega Mix"',
-                oldPrice: 1650,
-                price: 1190,
-                image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80',
-                desc: 'Пицца Пепперони + Бургер Шеф-Монстр + Большой картофель фри. Твой идеальный ужин!'
-            },
-            {
-                id: 101,
-                badge: '⚡ Суши Тайм',
-                name: 'Сет "Филадельфия Сплэш"',
-                oldPrice: 1240,
-                price: 890,
-                image: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=800&q=80',
-                desc: 'Ролл Филадельфия Люкс + Запеченный ролл с креветкой по мега-скидке.'
-            },
-            {
-                id: 102,
-                badge: '🥐 Комбо Завтрак',
-                name: 'Французское Утро',
-                oldPrice: 390,
-                price: 250,
-                image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80',
-                desc: 'Классический горячий круассан и отборные фермерские Сливки 20% к вашему кофе.'
-            }
+            { id: 100, badge: '🔥 Хит Дня', name: 'Гранд-Сет "Mega Mix"', oldPrice: 1650, price: 1190, image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80', desc: 'Пицца Пепперони + Бургер Шеф-Монстр + Большой картофель фри. Твой идеальный ужин!' },
+            { id: 101, badge: '⚡ Суши Тайм', name: 'Сет "Филадельфия Сплэш"', oldPrice: 1240, price: 890, image: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=800&q=80', desc: 'Ролл Филадельфия Люкс + Запеченный ролл с креветкой по мега-скидке.' },
+            { id: 102, badge: '🥐 Комбо Завтрак', name: 'Французское Утро', oldPrice: 390, price: 250, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80', desc: 'Классический горячий круассан и отборные фермерские Сливки 20% к вашему кофе.' }
         ];
 
         const CUSTOM_CONFIGS = {
@@ -156,11 +108,9 @@
             const [discount, setDiscount] = useState(0);
             const [promoError, setPromoError] = useState('');
             const [promoSuccess, setPromoSuccess] = useState('');
-
             const [currentSlide, setCurrentSlide] = useState(0);
             const [touchStart, setTouchStart] = useState(0);
             const [touchEnd, setTouchEnd] = useState(0);
-
             const [selectedProduct, setSelectedProduct] = useState(null);
             const [removedItems, setRemovedItems] = useState([]);
             const [addedItems, setAddedItems] = useState([]);
@@ -233,7 +183,7 @@
                     return;
                 }
 
-                const customKey = `${selectedProduct.id}-${removedItems.join(',')}-${addedItems.map(i => i.name).join(',')}`;
+                const customKey = selectedProduct.id + '-' + removedItems.join(',') + '-' + addedItems.map(i => i.name).join(',');
 
                 setCart(prev => {
                     const existing = prev.find(item => item.customKey === customKey);
@@ -301,60 +251,60 @@
                 const currentDateTime = new Date().toLocaleString('ru-RU');
                 
                 setActiveReceipt({
-                    receiptNo,
+                    receiptNo: receiptNo,
                     dateTime: currentDateTime,
                     items: [...cart],
-                    subTotal,
-                    discount,
-                    discountAmount,
-                    deliveryPrice,
-                    finalTotal
+                    subTotal: subTotal,
+                    discount: discount,
+                    discountAmount: discountAmount,
+                    deliveryPrice: deliveryPrice,
+                    finalTotal: finalTotal
                 });
                 setCart([]);
             };
 
             const downloadReceiptFile = () => {
-    if (!activeReceipt) return;
-    let text = `========================================\n   CRUNCH.GO RECEIPT\n========================================\n`;
-    text += `Кассовый чек №: ${activeReceipt.receiptNo}\nДата и время: ${activeReceipt.dateTime}\n----------------------------------------\n\n`;
-    
-    activeReceipt.items.forEach((item, index) => {
-        text += `${index + 1}. ${item.name} x ${item.count}\n`;
-        if (item.removed && item.removed.length > 0) {
-            text += ` [Убрано]: ${item.removed.join(', ')}\n`;
-        }
-        if (item.added && item.added.length > 0) {
-            text += ` [Добавлено]: ${item.added.map(i => i.name).join(', ')}\n`;
-        }
-        text += ` Цена: ${item.price * item.count} руб.\n\n`;
-    });
-    
-    text += `----------------------------------------\nСумма позиций: ${activeReceipt.subTotal} руб.\n`;
-    if (activeReceipt.discount > 0) {
-        text += `Скидка (${activeReceipt.discount}%): -${activeReceipt.discountAmount} руб.\n`;
-    }
-    text += `Доставка: ${activeReceipt.deliveryPrice === 0 ? 'БЕСПЛАТНО' : activeReceipt.deliveryPrice + ' руб.'}\n`;
-    text += `========================================\nИТОГО К ОПЛАТЕ: ${activeReceipt.finalTotal} РУБ.\n========================================\n`;
+                if (!activeReceipt) return;
+                let text = '========================================\n   CRUNCH.GO RECEIPT\n========================================\n';
+                text = text + 'Кассовый чек №: ' + activeReceipt.receiptNo + '\nДата и время: ' + activeReceipt.dateTime + '\n----------------------------------------\n\n';
+                
+                activeReceipt.items.forEach(function(item, index) {
+                    text = text + (index + 1) + '. ' + item.name + ' x ' + item.count + '\n';
+                    if (item.removed && item.removed.length > 0) {
+                        text = text + ' [Убрано]: ' + item.removed.join(', ') + '\n';
+                    }
+                    if (item.added && item.added.length > 0) {
+                        text = text + ' [Добавлено]: ' + item.added.map(function(i) { return i.name; }).join(', ') + '\n';
+                    }
+                    text = text + ' Цена: ' + (item.price * item.count) + ' руб.\n\n';
+                });
+                
+                text = text + '----------------------------------------\nСумма позиций: ' + activeReceipt.subTotal + ' руб.\n';
+                if (activeReceipt.discount > 0) {
+                    text = text + 'Скидка (' + activeReceipt.discount + '%): -' + activeReceipt.discountAmount + ' руб.\n';
+                }
+                text = text + 'Доставка: ' + (activeReceipt.deliveryPrice === 0 ? 'БЕСПЛАТНО' : activeReceipt.deliveryPrice + ' руб.') + '\n';
+                text = text + '========================================\nИТОГО К ОПЛАТЕ: ' + activeReceipt.finalTotal + ' РУБ.\n========================================\n';
 
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `CrunchGo_Receipt_${activeReceipt.receiptNo}.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-};
+                var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+                var url = URL.createObjectURL(blob);
+                var link = document.createElement('a');
+                link.href = url;
+                link.download = 'CrunchGo_Receipt_' + activeReceipt.receiptNo + '.txt';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
 
             const categories = ['Все', 'Бургеры', 'Пицца', 'Суши', 'Супы', 'Закуски', 'Комбо', 'Продукты', 'Выпечка', 'Напитки'];
-const filteredProducts = activeCategory === 'Все' ? PRODUCTS : PRODUCTS.filter(p => p.category === activeCategory);
-const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProduct.configType] : { removable: [], addable: [] };
+            const filteredProducts = activeCategory === 'Все' ? PRODUCTS : PRODUCTS.filter(function(p) { return p.category === activeCategory; });
+            const currentConfig = selectedProduct && selectedProduct.configType ? CUSTOM_CONFIGS[selectedProduct.configType] : { removable: [], addable: [] };
+
             return (
                 <div className="min-h-screen bg-gray-50 pb-20">
-                    {/* ХЕДЕР */}
                     <header className="bg-gradient-to-r from-orange-500 to-orange-600 text-white sticky top-0 z-50 shadow-lg">
                         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-                            <h1 onClick={() => setActiveReceipt(null)} className="text-2xl font-black tracking-tighter flex items-center gap-2 cursor-pointer">
+                            <h1 onClick={function() { setActiveReceipt(null); }} className="text-2xl font-black tracking-tighter flex items-center gap-2 cursor-pointer">
                                 <span className="bg-white p-2 rounded-xl shadow-inner flex items-center justify-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-orange-600"><path d="M11.996 2.25a.75.75 0 0 1 .75.75v1.272a5.253 5.253 0 0 1 4.542 4.195 4.5 4.5 0 0 1 1.712 3.533c0 1.942-1.229 3.597-2.94 4.218l.04.482a2.25 2.25 0 0 1-2.242 2.437H10.14a2.25 2.25 0 0 1-2.242-2.437l.04-.482c-1.711-.62-2.94-2.276-2.94-4.218a4.5 4.5 0 0 1 1.712-3.533 5.253 5.253 0 0 1 4.532-4.194V3a.75.75 0 0 1 .755-.75ZM18 12a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3c0 .878.379 1.667 1 2.22A4.47 4.47 0 0 1 9.4 15h5.2c1.01 0 1.944-.336 2.7-1.12.338-.344.7-.72.7-1.66ZM9.398 16.5a5.955 5.955 0 0 0-1.558.83l-.04.482a.75.75 0 0 0 .747.813h6.906a.75.75 0 0 0 .747-.813l-.04-.482a5.955 5.955 0 0 0-1.558-.83H9.398Z" /></svg>
                                 </span>
@@ -368,7 +318,6 @@ const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProdu
                     </header>
 
                     {activeReceipt ? (
-                        /* ЭКРАН ЧЕКА */
                         <div className="max-w-md mx-auto px-4 mt-12 animate-receipt">
                             <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-200 relative overflow-hidden bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
                                 <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-orange-500 via-red-500 to-orange-500"></div>
@@ -379,17 +328,19 @@ const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProdu
                                 </div>
                                 <div className="border-b border-dashed border-gray-300 my-6"></div>
                                 <div className="space-y-4">
-                                    {activeReceipt.items.map((item, index) => (
-                                        <div key={index} className="text-xs flex justify-between items-start gap-4">
-                                            <div className="space-y-0.5">
-                                                <span className="font-extrabold text-gray-900">{item.name}</span>
-                                                <span className="text-gray-400 block">{item.count} шт. × {item.price / item.count} ₽</span>
-                                                {item.removed?.length > 0 && <p className="text-[10px] text-red-500 font-medium">Без: {item.removed.join(', ')}</p>}
-                                                {item.added?.length > 0 && <p className="text-[10px] text-green-600 font-medium">+ {item.added.map(i=>i.name).join(', ')}</p>}
+                                    {activeReceipt.items.map(function(item, index) {
+                                        return (
+                                            <div key={index} className="text-xs flex justify-between items-start gap-4">
+                                                <div className="space-y-0.5">
+                                                    <span className="font-extrabold text-gray-900">{item.name}</span>
+                                                    <span className="text-gray-400 block">{item.count} шт. × {item.price / item.count} ₽</span>
+                                                    {item.removed && item.removed.length > 0 && <p className="text-[10px] text-red-500 font-medium">Без: {item.removed.join(', ')}</p>}
+                                                    {item.added && item.added.length > 0 && <p className="text-[10px] text-green-600 font-medium">+ {item.added.map(function(i) { return i.name; }).join(', ')}</p>}
+                                                </div>
+                                                <span className="font-bold text-gray-900 whitespace-nowrap">{item.price * item.count} ₽</span>
                                             </div>
-                                            <span className="font-bold text-gray-900 whitespace-nowrap">{item.price * item.count} ₽</span>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                                 <div className="border-b border-dashed border-gray-300 my-6"></div>
                                 <div className="space-y-2 text-xs font-semibold text-gray-500">
@@ -397,23 +348,20 @@ const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProdu
                                     {activeReceipt.discount > 0 && (
                                         <div className="flex justify-between text-green-600"><span>Скидка ({activeReceipt.discount}%):</span><span>-{activeReceipt.discountAmount} ₽</span></div>
                                     )}
-                                    <div className="flex justify-between"><span>Доставка:</span><span className="text-gray-900">{activeReceipt.deliveryPrice === 0 ? 'Бесплатно' : `${activeReceipt.deliveryPrice} ₽`}</span></div>
+                                    <div className="flex justify-between"><span>Доставка:</span><span className="text-gray-900">{activeReceipt.deliveryPrice === 0 ? 'Бесплатно' : activeReceipt.deliveryPrice + ' ₽'}</span></div>
                                     <div className="flex justify-between text-base font-black text-gray-900 pt-4 border-t border-gray-200 mt-2">
                                         <span>ИТОГО К ОПЛАТЕ:</span><span className="text-orange-600 text-xl">{activeReceipt.finalTotal} ₽</span>
                                     </div>
                                 </div>
                                 <div className="mt-8 space-y-3">
                                     <button onClick={downloadReceiptFile} className="w-full bg-gray-900 hover:bg-black text-white text-xs font-bold py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">📥 Сохранить чек</button>
-                                    <button onClick={() => setActiveReceipt(null)} className="w-full bg-orange-50 hover:bg-orange-100 text-orange-600 text-xs font-bold py-3 rounded-xl transition-all text-center cursor-pointer">Вернуться в меню</button>
+                                    <button onClick={function() { setActiveReceipt(null); }} className="w-full bg-orange-50 hover:bg-orange-100 text-orange-600 text-xs font-bold py-3 rounded-xl transition-all text-center cursor-pointer">Вернуться в меню</button>
                                 </div>
                             </div>
                         </div>
                     ) : (
-                        /* ГЛАВНЫЙ ЭКРАН СЕТКИ */
                         <main className="max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
                             <div className="lg:col-span-2 space-y-8">
-                                
-                                {/* АДАПТИВНЫЙ СЛАЙДЕР АКЦИЙ */}
                                 <div 
                                     className="relative bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 select-none touch-pan-y min-h-[220px]"
                                     onTouchStart={handleTouchStart}
@@ -422,64 +370,66 @@ const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProdu
                                 >
                                     <div 
                                         className="flex transition-transform duration-700 ease-in-out"
-                                        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                                        style={{ transform: 'translateX(-' + (currentSlide * 100) + '%)' }}
                                     >
-                                        {PROMOTIONS.map((promo) => (
-                                            <div key={promo.id} className="w-full shrink-0 flex flex-col md:grid md:grid-cols-2">
-                                                <div className="relative h-40 md:h-full min-h-[140px]">
-                                                    <img src={promo.image} alt={promo.name} className="absolute inset-0 w-full h-full object-cover" />
-                                                    <div className="absolute top-3 left-3 bg-orange-500 text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wide z-10">
-                                                        {promo.badge}
-                                                    </div>
-                                                </div>
-                                                <div className="p-5 flex flex-col justify-between space-y-4 bg-gradient-to-br from-white to-orange-50/10 pb-8 md:pb-5">
-                                                    <div>
-                                                        <h3 className="text-lg font-black text-gray-900 leading-tight">{promo.name}</h3>
-                                                        <p className="text-xs text-gray-400 mt-1 leading-relaxed">{promo.desc}</p>
-                                                    </div>
-                                                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                                                        <div>
-                                                            <span className="text-[10px] text-gray-400 line-through block">{promo.oldPrice} ₽</span>
-                                                            <span className="text-xl font-black text-orange-600">{promo.price} ₽</span>
+                                        {PROMOTIONS.map(function(promo) {
+                                            return (
+                                                <div key={promo.id} className="w-full shrink-0 flex flex-col md:grid md:grid-cols-2">
+                                                    <div className="relative h-40 md:h-full min-h-[140px]">
+                                                        <img src={promo.image} alt={promo.name} className="absolute inset-0 w-full h-full object-cover" />
+                                                        <div className="absolute top-3 left-3 bg-orange-500 text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wide z-10">
+                                                            {promo.badge}
                                                         </div>
-                                                        {getProductCountInCart(promo.id) > 0 ? (
-                                                            <div className="flex items-center bg-orange-500 text-white rounded-xl p-0.5 shadow-sm">
-                                                                <button onClick={() => removeFromCartSimple(promo.id)} className="px-2.5 py-0.5 font-bold text-sm hover:bg-orange-600 rounded-lg cursor-pointer">-</button>
-                                                                <span className="px-2 font-bold text-xs min-w-[16px] text-center">{getProductCountInCart(promo.id)}</span>
-                                                                <button onClick={() => addToCartSimple(promo)} className="px-2.5 py-0.5 font-bold text-sm hover:bg-orange-600 rounded-lg cursor-pointer">+</button>
+                                                    </div>
+                                                    <div className="p-5 flex flex-col justify-between space-y-4 bg-gradient-to-br from-white to-orange-50/10 pb-8 md:pb-5">
+                                                        <div>
+                                                            <h3 className="text-lg font-black text-gray-900 leading-tight">{promo.name}</h3>
+                                                            <p className="text-xs text-gray-400 mt-1 leading-relaxed">{promo.desc}</p>
+                                                        </div>
+                                                        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                                                            <div>
+                                                                <span className="text-[10px] text-gray-400 line-through block">{promo.oldPrice} ₽</span>
+                                                                <span className="text-xl font-black text-orange-600">{promo.price} ₽</span>
                                                             </div>
-                                                        ) : (
-                                                            <button onClick={() => addToCartSimple(promo)} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md transition-all cursor-pointer">Добавить +</button>
-                                                        )}
+                                                            {getProductCountInCart(promo.id) > 0 ? (
+                                                                <div className="flex items-center bg-orange-500 text-white rounded-xl p-0.5 shadow-sm">
+                                                                    <button onClick={function() { removeFromCartSimple(promo.id); }} className="px-2.5 py-0.5 font-bold text-sm hover:bg-orange-600 rounded-lg cursor-pointer">-</button>
+                                                                    <span className="px-2 font-bold text-xs min-w-[16px] text-center">{getProductCountInCart(promo.id)}</span>
+                                                                    <button onClick={function() { addToCartSimple(promo); }} className="px-2.5 py-0.5 font-bold text-sm hover:bg-orange-600 rounded-lg cursor-pointer">+</button>
+                                                                </div>
+                                                            ) : (
+                                                                <button onClick={function() { addToCartSimple(promo); }} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md transition-all cursor-pointer">Добавить +</button>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
-
-                                    {/* ИНДИКАТОРЫ СЛАЙДЕРА */}
                                     <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-10">
-                                        {PROMOTIONS.map((_, idx) => (
-                                            <button 
-                                                key={idx} 
-                                                onClick={() => setCurrentSlide(idx)}
-                                                className={`h-1.5 rounded-full transition-all duration-300 ${currentSlide === idx ? 'w-4 bg-orange-500' : 'w-1.5 bg-gray-300'}`}
-                                            />
-                                        ))}
+                                        {PROMOTIONS.map(function(_, idx) {
+                                            return (
+                                                <button 
+                                                    key={idx} 
+                                                    onClick={function() { setCurrentSlide(idx); }}
+                                                    className={'h-1.5 rounded-full transition-all duration-300 ' + (currentSlide === idx ? 'w-4 bg-orange-500' : 'w-1.5 bg-gray-300')}
+                                                />
+                                            );
+                                        })}
                                     </div>
                                 </div>
 
-                                {/* СЕЛЕКТОР КАТЕГОРИЙ */}
                                 <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-none sticky top-[72px] bg-gray-50 py-2 z-40">
-                                    {categories.map(cat => (
-                                        <button key={cat} onClick={() => setActiveCategory(cat)} className={`px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all cursor-pointer ${activeCategory === cat ? 'bg-orange-500 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200/60'}`}>{cat}</button>
-                                    ))}
+                                    {categories.map(function(cat) {
+                                        return (
+                                            <button key={cat} onClick={function() { setActiveCategory(cat); }} className={'px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all cursor-pointer ' + (activeCategory === cat ? 'bg-orange-500 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200/60')}>{cat}</button>
+                                        );
+                                    })}
                                 </div>
 
-                                {/* СЕТКА СИСТЕМЫ ДОБАВЛЕНИЯ */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                    {filteredProducts.map(product => {
-                                        const countInCart = getProductCountInCart(product.id);
+                                    {filteredProducts.map(function(product) {
+                                        var countInCart = getProductCountInCart(product.id);
                                         return (
                                             <div key={product.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow group">
                                                 <div className="relative h-44 overflow-hidden bg-gray-100">
@@ -496,16 +446,15 @@ const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProdu
                                                         <div className="flex items-center gap-1.5">
                                                             {countInCart > 0 ? (
                                                                 <div className="flex items-center bg-orange-500 text-white rounded-xl p-0.5 select-none shadow-sm">
-                                                                    <button onClick={() => removeFromCartSimple(product.id)} className="px-2.5 py-1 font-bold text-sm hover:bg-orange-600 rounded-lg cursor-pointer">-</button>
+                                                                    <button onClick={function() { removeFromCartSimple(product.id); }} className="px-2.5 py-1 font-bold text-sm hover:bg-orange-600 rounded-lg cursor-pointer">-</button>
                                                                     <span className="px-2 font-mono font-bold text-xs min-w-[16px] text-center">{countInCart}</span>
-                                                                    <button onClick={() => addToCartSimple(product)} className="px-2.5 py-1 font-bold text-sm hover:bg-orange-600 rounded-lg cursor-pointer">+</button>
+                                                                    <button onClick={function() { addToCartSimple(product); }} className="px-2.5 py-1 font-bold text-sm hover:bg-orange-600 rounded-lg cursor-pointer">+</button>
                                                                 </div>
                                                             ) : (
-                                                                <button onClick={() => addToCartSimple(product)} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-sm transition-all cursor-pointer">Добавить +</button>
+                                                                <button onClick={function() { addToCartSimple(product); }} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-sm transition-all cursor-pointer">Добавить +</button>
                                                             )}
-                                                            
                                                             {product.configType && (
-                                                                <button onClick={() => openProductModal(product)} className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold p-2 rounded-xl text-xs transition-all cursor-pointer" title="Настроить состав">⚙️</button>
+                                                                <button onClick={function() { openProductModal(product); }} className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold p-2 rounded-xl text-xs transition-all cursor-pointer" title="Настроить состав">⚙️</button>
                                                             )}
                                                         </div>
                                                     </div>
@@ -516,7 +465,6 @@ const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProdu
                                 </div>
                             </div>
 
-                            {/* БОКОВАЯ КОРЗИНА */}
                             <div id="cart" className="lg:col-span-1">
                                 <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 sticky top-24 space-y-6">
                                     <h3 className="text-lg font-black text-gray-900 border-b pb-4 flex justify-between items-center">
@@ -531,22 +479,24 @@ const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProdu
                                         </div>
                                     ) : (
                                         <div className="space-y-4 max-h-72 overflow-y-auto pr-1 scrollbar-none">
-                                            {cart.map((item, index) => (
-                                                <div key={item.customKey || `${item.id}-${index}`} className="flex justify-between items-start text-xs gap-3 border-b border-gray-50 pb-3">
-                                                    <img src={item.image} className="w-10 h-10 object-cover rounded-lg bg-gray-50 shrink-0" />
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className="font-bold text-gray-800 truncate">{item.name}</div>
-                                                        {item.removed?.length > 0 && <p className="text-[10px] text-red-400">Без: {item.removed.join(', ')}</p>}
-                                                        {item.added?.length > 0 && <p className="text-[10px] text-green-500">+ {item.added.map(i=>i.name).join(', ')}</p>}
-                                                        <div className="text-gray-400 mt-0.5">{item.price} ₽ × {item.count}</div>
+                                            {cart.map(function(item, index) {
+                                                return (
+                                                    <div key={item.customKey || item.id + '-' + index} className="flex justify-between items-start text-xs gap-3 border-b border-gray-50 pb-3">
+                                                        <img src={item.image} className="w-10 h-10 object-cover rounded-lg bg-gray-50 shrink-0" />
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className="font-bold text-gray-800 truncate">{item.name}</div>
+                                                            {item.removed && item.removed.length > 0 && <p className="text-[10px] text-red-400">Без: {item.removed.join(', ')}</p>}
+                                                            {item.added && item.added.length > 0 && <p className="text-[10px] text-green-500">+ {item.added.map(function(i) { return i.name; }).join(', ')}</p>}
+                                                            <div className="text-gray-400 mt-0.5">{item.price} ₽ × {item.count}</div>
+                                                        </div>
+                                                        <div className="flex items-center bg-gray-100 rounded-lg p-0.5 shrink-0 select-none">
+                                                            <button onClick={function() { removeFromCartByKey(item.customKey || item.id, !!item.customKey); }} className="px-2 py-0.5 text-gray-600 hover:bg-white rounded-md font-bold text-sm transition-colors cursor-pointer">-</button>
+                                                            <span className="px-2 font-mono font-bold text-[11px]">{item.count}</span>
+                                                            <button onClick={function() { addMoreFromCart(item); }} className="px-2 py-0.5 text-gray-600 hover:bg-white rounded-md font-bold text-sm transition-colors cursor-pointer">+</button>
+                                                        </div>
                                                     </div>
-                                                    <div className="flex items-center bg-gray-100 rounded-lg p-0.5 shrink-0 select-none">
-                                                        <button onClick={() => removeFromCartByKey(item.customKey || item.id, !!item.customKey)} className="px-2 py-0.5 text-gray-600 hover:bg-white rounded-md font-bold text-sm transition-colors cursor-pointer">-</button>
-                                                        <span className="px-2 font-mono font-bold text-[11px]">{item.count}</span>
-                                                        <button onClick={() => addMoreFromCart(item)} className="px-2 py-0.5 text-gray-600 hover:bg-white rounded-md font-bold text-sm transition-colors cursor-pointer">+</button>
-                                                    </div>
-                                                </div>
-                                            ))}
+                                                );
+                                            })}
                                         </div>
                                     )}
 
@@ -561,7 +511,7 @@ const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProdu
 
                                     <div className="pt-2">
                                         <div className="flex gap-2">
-                                            <input type="text" value={promoCode} onChange={(e) => setPromoCode(e.target.value)} placeholder="Код: CRUNCH20" className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs flex-1 uppercase font-mono font-bold" />
+                                            <input type="text" value={promoCode} onChange={function(e) { setPromoCode(e.target.value); }} placeholder="Код: CRUNCH20" className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs flex-1 uppercase font-mono font-bold" />
                                             <button onClick={handleApplyPromo} className="bg-gray-900 text-white font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Ок</button>
                                         </div>
                                         {promoError && <p className="text-[11px] text-red-500 mt-1.5">❌ {promoError}</p>}
@@ -571,23 +521,22 @@ const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProdu
                                     <div className="bg-gray-50/80 rounded-2xl p-4 space-y-2.5 text-xs font-semibold text-gray-500">
                                         <div className="flex justify-between"><span>Сумма:</span><span className="text-gray-900">{subTotal} ₽</span></div>
                                         {discount > 0 && <div className="flex justify-between text-green-600"><span>Скидка ({discount}%):</span><span>-{discountAmount} ₽</span></div>}
-                                        <div className="flex justify-between"><span>Доставка:</span><span className="text-gray-900">{subTotal === 0 ? '0 ₽' : deliveryPrice === 0 ? 'Бесплатно' : `${deliveryPrice} ₽`}</span></div>
+                                        <div className="flex justify-between"><span>Доставка:</span><span className="text-gray-900">{subTotal === 0 ? '0 ₽' : deliveryPrice === 0 ? 'Бесплатно' : deliveryPrice + ' ₽'}</span></div>
                                         <div className="flex justify-between text-base font-black text-gray-900 pt-3 border-t border-dashed border-gray-200"><span>К оплате:</span><span className="text-orange-600 text-lg">{finalTotal} ₽</span></div>
                                     </div>
 
-                                    <button onClick={handleCheckout} className={`w-full font-bold py-4 rounded-xl shadow-lg text-center text-sm text-white cursor-pointer transition-all ${cart.length > 0 ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-100' : 'bg-gray-300 shadow-none cursor-not-allowed'}`} disabled={cart.length === 0}>Заказать доставку 🚀</button>
+                                    <button onClick={handleCheckout} className={'w-full font-bold py-4 rounded-xl shadow-lg text-center text-sm text-white cursor-pointer transition-all ' + (cart.length > 0 ? 'bg-orange-500 hover:bg-orange-600 shadow-orange-100' : 'bg-gray-300 shadow-none cursor-not-allowed')} disabled={cart.length === 0}>Заказать доставку 🚀</button>
                                 </div>
                             </div>
                         </main>
                     )}
 
-                    {/* МОДАЛКА КАСТОМИЗАЦИИ */}
                     {selectedProduct && selectedProduct.configType && (
                         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                             <div className="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-100 flex flex-col">
                                 <div className="relative h-64 bg-gray-100 shrink-0">
                                     <img src={selectedProduct.image} className="w-full h-full object-cover" />
-                                    <button onClick={() => setSelectedProduct(null)} className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm hover:bg-white text-gray-700 font-bold p-2 rounded-full w-10 h-10 flex items-center justify-center shadow-md cursor-pointer">✕</button>
+                                    <button onClick={function() { setSelectedProduct(null); }} className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm hover:bg-white text-gray-700 font-bold p-2 rounded-full w-10 h-10 flex items-center justify-center shadow-md cursor-pointer">✕</button>
                                 </div>
                                 <div className="p-6 space-y-6 flex-1">
                                     <div className="space-y-2">
@@ -598,28 +547,40 @@ const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProdu
                                         <p className="text-xs text-gray-500 leading-relaxed">{selectedProduct.desc}</p>
                                     </div>
 
-                                    {currentConfig.removable.length > 0 && (
+                                    {currentConfig.removable && currentConfig.removable.length > 0 && (
                                         <div className="space-y-2">
                                             <h4 className="text-xs font-black text-gray-400 uppercase tracking-wider">Убрать из состава (Бесплатно)</h4>
                                             <div className="flex flex-wrap gap-2">
-                                                {currentConfig.removable.map(ing => {
-                                                    const isRemoved = removedItems.includes(ing);
+                                                {currentConfig.removable.map(function(ing) {
+                                                    var isRemoved = removedItems.indexOf(ing) !== -1;
                                                     return (
-                                                        <button key={ing} onClick={() => setRemovedItems(prev => prev.includes(ing) ? prev.filter(i => i !== ing) : [...prev, ing])} className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${isRemoved ? 'border-red-500 bg-red-50 text-red-600' : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'}`}>{isRemoved ? `✕ Без ${ing.toLowerCase()}` : ing}</button>
+                                                        <button key={ing} onClick={function() { 
+                                                            if (removedItems.indexOf(ing) !== -1) {
+                                                                setRemovedItems(removedItems.filter(function(i) { return i !== ing; }));
+                                                            } else {
+                                                                setRemovedItems([...removedItems, ing]);
+                                                            }
+                                                        }} className={'px-3 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ' + (isRemoved ? 'border-red-500 bg-red-50 text-red-600' : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50')}>{isRemoved ? '✕ Без ' + ing.toLowerCase() : ing}</button>
                                                     );
                                                 })}
                                             </div>
                                         </div>
                                     )}
 
-                                    {currentConfig.addable.length > 0 && (
+                                    {currentConfig.addable && currentConfig.addable.length > 0 && (
                                         <div className="space-y-2">
                                             <h4 className="text-xs font-black text-gray-400 uppercase tracking-wider">Добавить в блюдо (За доплату)</h4>
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                                {currentConfig.addable.map(ing => {
-                                                    const isAdded = addedItems.some(i => i.name === ing.name);
+                                                {currentConfig.addable.map(function(ing) {
+                                                    var isAdded = addedItems.some(function(i) { return i.name === ing.name; });
                                                     return (
-                                                        <button key={ing.name} onClick={() => setAddedItems(prev => prev.some(i => i.name === ing.name) ? prev.filter(i => i.name !== ing.name) : [...prev, ing])} className={`px-3 py-2.5 rounded-xl text-xs font-bold border flex justify-between items-center transition-all cursor-pointer ${isAdded ? 'border-green-500 bg-green-50 text-green-600' : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'}`}>
+                                                        <button key={ing.name} onClick={function() {
+                                                            if (addedItems.some(function(i) { return i.name === ing.name; })) {
+                                                                setAddedItems(addedItems.filter(function(i) { return i.name !== ing.name; }));
+                                                            } else {
+                                                                setAddedItems([...addedItems, ing]);
+                                                            }
+                                                        }} className={'px-3 py-2.5 rounded-xl text-xs font-bold border flex justify-between items-center transition-all cursor-pointer ' + (isAdded ? 'border-green-500 bg-green-50 text-green-600' : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50')}>
                                                             <span>{ing.name}</span><span className={isAdded ? 'text-green-600' : 'text-gray-400'}>+{ing.price} ₽</span>
                                                         </button>
                                                     );
@@ -631,7 +592,7 @@ const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProdu
                                     <div className="pt-4 border-t flex items-center justify-between gap-4">
                                         <div>
                                             <span className="text-[10px] text-gray-400 block font-bold uppercase">Стоимость</span>
-                                            <span className="text-2xl font-black text-gray-900">{selectedProduct.price + addedItems.reduce((sum, i) => sum + i.price, 0)} ₽</span>
+                                            <span className="text-2xl font-black text-gray-900">{selectedProduct.price + addedItems.reduce(function(sum, i) { return sum + i.price; }, 0)} ₽</span>
                                         </div>
                                         <button onClick={handleAddToCartCustomized} className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-3.5 rounded-xl text-sm shadow-md transition-all active:scale-95 cursor-pointer">Применить настройки +</button>
                                     </div>
@@ -643,7 +604,7 @@ const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProdu
             );
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
+        var root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
 </body>
