@@ -9,8 +9,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Стабильный React 18 и ReactDOM -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <!-- Вместо CDN React используем другую версию -->
+<script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
     
     <!-- Babel для компиляции JSX -->
 <script type="text/babel" data-type="module">
