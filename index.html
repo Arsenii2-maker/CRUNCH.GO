@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUNCH.GO — Доставка еды и продуктов</title>
     
+    <!-- ФАВИКОН -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23EA580C'><path d='M11.996 2.25a.75.75 0 0 1 .75.75v1.272a5.253 5.253 0 0 1 4.542 4.195 4.5 4.5 0 0 1 1.712 3.533c0 1.942-1.229 3.597-2.94 4.218l.04.482a2.25 2.25 0 0 1-2.242 2.437H10.14a2.25 2.25 0 0 1-2.242-2.437l.04-.482c-1.711-.62-2.94-2.276-2.94-4.218a4.5 4.5 0 0 1 1.712-3.533 5.253 5.253 0 0 1 4.532-4.194V3a.75.75 0 0 1 .755-.75ZM18 12a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3c0 .878.379 1.667 1 2.22A4.47 4.47 0 0 1 9.4 15h5.2c1.01 0 1.944-.336 2.7-1.12.338-.344.7-.72.7-1.66ZM9.398 16.5a5.955 5.955 0 0 0-1.558.83l-.04.482a.75.75 0 0 0 .747.813h6.906a.75.75 0 0 0 .747-.813l-.04-.482a5.955 5.955 0 0 0-1.558-.83H9.398Z'/></svg>">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -59,23 +62,23 @@
             { id: 23, name: 'Маки с авокадо', price: 210, category: 'Суши', image: 'https://images.unsplash.com/photo-1582450871972-ab5ca641643d?auto=format&fit=crop&w=600&q=80', desc: 'Классический аккуратный маки-ролл со свежим спелым авокадо.', ccal: '180 ккал', configType: 'sushi' },
             { id: 24, name: 'Ролл Калифорния', price: 430, category: 'Суши', image: 'https://images.unsplash.com/photo-1588459719230-4b6b1e9a664c?auto=format&fit=crop&w=600&q=80', desc: 'Крабовое мясо, огурец, авокадо, икра тобико и майонез.', ccal: '310 ккал', configType: 'sushi' },
             { id: 25, name: 'Ролл Унаги', price: 490, category: 'Суши', image: 'https://images.unsplash.com/photo-1617196035154-1e7e6e28b0db?auto=format&fit=crop&w=600&q=80', desc: 'Угорь в сладком соусе, огурец, авокадо и кунжут.', ccal: '360 ккал', configType: 'sushi' },
-            { id: 26, name: 'Нигири с лососем', price: 350, category: 'Суши', image: 'https://images.unsplash.com/photo-1558394319-b8d9f2c8e2b2?auto=format&fit=crop&w=600&q=80', desc: 'Классические нигири с лососем и васаби.', ccal: '210 ккал', configType: 'sushi' },
-            { id: 27, name: 'Спайси Тuna Ролл', price: 460, category: 'Суши', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&w=600&q=80', desc: 'Острый ролл с тунцом, огурцом и спайси-соусом.', ccal: '290 ккал', configType: 'sushi' },
-            { id: 28, name: 'Темпура Ролл', price: 510, category: 'Суши', image: 'https://images.unsplash.com/photo-1617196034794-5efb20fe0a4e?auto=format&fit=crop&w=600&q=80', desc: 'Ролл с креветкой темпура, авокадо, огурцом и сливочным сыром.', ccal: '440 ккал', configType: 'sushi' },
-            { id: 29, name: 'Сашими сет', price: 580, category: 'Суши', image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&w=600&q=80', desc: 'Ассорти из лосося, тунца, окуня и креветок.', ccal: '250 ккал', configType: 'sushi' },
-            { id: 30, name: 'Ролл Дракон', price: 560, category: 'Суши', image: 'https://images.unsplash.com/photo-1617196035154-1e7e6e28b0db?auto=format&fit=crop&w=600&q=80', desc: 'Ролл с угрем, авокадо, огурцом, покрытый ломтиками лосося.', ccal: '400 ккал', configType: 'sushi' },
+            { id: 26, name: 'Нигири с лососем', price: 350, category: 'Суши', image: 'https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=600&q=80', desc: 'Классические нигири с лососем и васаби.', ccal: '210 ккал', configType: 'sushi' },
+            { id: 27, name: 'Спайси Туна Ролл', price: 460, category: 'Суши', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80', desc: 'Острый ролл с тунцом, огурцом и спайси-соусом.', ccal: '290 ккал', configType: 'sushi' },
+            { id: 28, name: 'Темпура Ролл', price: 510, category: 'Суши', image: 'https://images.unsplash.com/photo-1582450871972-ab5ca641643d?auto=format&fit=crop&w=600&q=80', desc: 'Ролл с креветкой темпура, авокадо, огурцом и сливочным сыром.', ccal: '440 ккал', configType: 'sushi' },
+            { id: 29, name: 'Сашими сет', price: 580, category: 'Суши', image: 'https://images.unsplash.com/photo-1617196035154-1e7e6e28b0db?auto=format&fit=crop&w=600&q=80', desc: 'Ассорти из лосося, тунца, окуня и креветок.', ccal: '250 ккал', configType: 'sushi' },
+            { id: 30, name: 'Ролл Дракон', price: 560, category: 'Суши', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80', desc: 'Ролл с угрем, авокадо, огурцом, покрытый ломтиками лосося.', ccal: '400 ккал', configType: 'sushi' },
 
             // === СУПЫ (10) ===
             { id: 31, name: 'Том Ям с креветками', price: 490, category: 'Супы', image: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=600&q=80', desc: 'Острый тайский суп на кокосовом молоке с тигровыми креветками и грибами.', ccal: '410 ккал', configType: 'soups' },
-            { id: 32, name: 'Рамен с курицей тясю', price: 430, category: 'Супы', image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80', desc: 'Наваристый пшеничный суп с маринованной курочкой, бамбуком и яйцом.', ccal: '580 ккал', configType: 'soups' },
+            { id: 32, name: 'Рамен с курицей', price: 430, category: 'Супы', image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80', desc: 'Наваристый пшеничный суп с маринованной курочкой, бамбуком и яйцом.', ccal: '580 ккал', configType: 'soups' },
             { id: 33, name: 'Сливочный суп с лососем', price: 460, category: 'Супы', image: 'https://images.unsplash.com/photo-1603105037880-880cd4edfb0d?auto=format&fit=crop&w=600&q=80', desc: 'Нежный сливочно-рыбный суп с кусочками дикого лосося, зеленью и картофелем.', ccal: '390 ккал', configType: 'soups' },
-            { id: 34, name: 'Борщ Украинский', price: 380, category: 'Супы', image: 'https://images.unsplash.com/photo-1566132924824-18f75e2f6f57?auto=format&fit=crop&w=600&q=80', desc: 'Классический красный борщ со сметаной, зеленью и чесночными пампушками.', ccal: '450 ккал', configType: 'soups' },
+            { id: 34, name: 'Борщ', price: 380, category: 'Супы', image: 'https://images.unsplash.com/photo-1566132924824-18f75e2f6f57?auto=format&fit=crop&w=600&q=80', desc: 'Классический красный борщ со сметаной, зеленью и чесночными пампушками.', ccal: '450 ккал', configType: 'soups' },
             { id: 35, name: 'Суп Харчо', price: 410, category: 'Супы', image: 'https://images.unsplash.com/photo-1550602037-36d812c4a65a?auto=format&fit=crop&w=600&q=80', desc: 'Грузинский суп из говядины с рисом, грецкими орехами и пряностями.', ccal: '520 ккал', configType: 'soups' },
             { id: 36, name: 'Куриный суп с лапшой', price: 340, category: 'Супы', image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80', desc: 'Наваристый куриный бульон с домашней лапшой, морковью и зеленью.', ccal: '380 ккал', configType: 'soups' },
             { id: 37, name: 'Крем-суп из тыквы', price: 360, category: 'Супы', image: 'https://images.unsplash.com/photo-1566914900708-3ac81f6c86f5?auto=format&fit=crop&w=600&q=80', desc: 'Нежный крем-суп из тыквы с имбирем и сливками, подается с семечками.', ccal: '280 ккал', configType: 'soups' },
-            { id: 38, name: 'Суп Мисо', price: 320, category: 'Супы', image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80', desc: 'Японский суп на основе ферментированной соевой пасты с тофу и водорослями.', ccal: '180 ккал', configType: 'soups' },
-            { id: 39, name: 'Грибной крем-суп', price: 390, category: 'Супы', image: 'https://images.unsplash.com/photo-1550602037-36d812c4a65a?auto=format&fit=crop&w=600&q=80', desc: 'Ароматный крем-суп из лесных грибов со сливками и гренками.', ccal: '320 ккал', configType: 'soups' },
-            { id: 40, name: 'Солянка мясная', price: 420, category: 'Супы', image: 'https://images.unsplash.com/photo-1566132924824-18f75e2f6f57?auto=format&fit=crop&w=600&q=80', desc: 'Наваристый суп с говядиной, колбасой, солеными огурцами и маслинами.', ccal: '560 ккал', configType: 'soups' },
+            { id: 38, name: 'Суп Мисо', price: 320, category: 'Супы', image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80', desc: 'Японский суп на основе ферментированной соевой пасты с тофу и водорослями.', ccal: '180 ккал', configType: 'soups' },
+            { id: 39, name: 'Грибной крем-суп', price: 390, category: 'Супы', image: 'https://images.unsplash.com/photo-1603105037880-880cd4edfb0d?auto=format&fit=crop&w=600&q=80', desc: 'Ароматный крем-суп из лесных грибов со сливками и гренками.', ccal: '320 ккал', configType: 'soups' },
+            { id: 40, name: 'Солянка мясная', price: 420, category: 'Супы', image: 'https://images.unsplash.com/photo-1550602037-36d812c4a65a?auto=format&fit=crop&w=600&q=80', desc: 'Наваристый суп с говядиной, колбасой, солеными огурцами и маслинами.', ccal: '560 ккал', configType: 'soups' },
 
             // === ЗАКУСКИ (10) ===
             { id: 41, name: 'Картофель фри XL', price: 180, category: 'Закуски', image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80', desc: 'Золотистый, хрустящий картофель с крупной морской солью.', ccal: '320 ккал', configType: null },
@@ -86,13 +89,13 @@
             { id: 46, name: 'Наггетсы куриные', price: 210, category: 'Закуски', image: 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=600&q=80', desc: 'Хрустящие куриные наггетсы с соусом BBQ или сырным.', ccal: '280 ккал', configType: null },
             { id: 47, name: 'Картофель по-деревенски', price: 190, category: 'Закуски', image: 'https://images.unsplash.com/photo-1518013431117-eb1465fa5752?auto=format&fit=crop&w=600&q=80', desc: 'Крупные дольки картофеля с чесноком и розмарином.', ccal: '300 ккал', configType: null },
             { id: 48, name: 'Мини-шашлычки из курицы', price: 320, category: 'Закуски', image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80', desc: 'Нежные куриные шашлычки на шпажках с пряным маринадом.', ccal: '350 ккал', configType: null },
-            { id: 49, name: 'Овощной салат', price: 200, category: 'Закуски', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80', desc: 'Свежие овощи с оливковым маслом и бальзамиком.', ccal: '120 ккал', configType: null },
+            { id: 49, name: 'Овощной салат', price: 200, category: 'Закуски', image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80', desc: 'Свежие овощи с оливковым маслом и бальзамиком.', ccal: '120 ккал', configType: null },
             { id: 50, name: 'Хумус с лавашем', price: 230, category: 'Закуски', image: 'https://images.unsplash.com/photo-1565926371600-39e008e9c12d?auto=format&fit=crop&w=600&q=80', desc: 'Нежный хумус из нута с тонким лавашем и овощной нарезкой.', ccal: '280 ккал', configType: null },
 
             // === КОМБО (10) ===
-            { id: 51, name: 'Комбо На Двоих', price: 820, category: 'Комбо', image: 'https://images.unsplash.com/photo-1610614819513-58e34989848b?auto=format&fit=crop&w=600&q=80', desc: 'Два бургера, порция картофеля фри XL и две бутылочки Колы.', ccal: '1420 ккал', configType: null },
+            { id: 51, name: 'Комбо На Двоих', price: 820, category: 'Комбо', image: 'https://images.unsplash.com/photo-1610614819513-58e34989848b?auto=format&fit=crop&w=600&q=80', desc: 'Два классических бургера, порция картофеля фри XL и две бутылочки Колы.', ccal: '1420 ккал', configType: null },
             { id: 52, name: 'Комбо Итальяно', price: 990, category: 'Комбо', image: 'https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=600&q=80', desc: 'Пицца Пепперони + Пицца Маргарита + литр фирменного морса.', ccal: '1980 ккал', configType: null },
-            { id: 53, name: 'Семейный Сет', price: 1200, category: 'Комбо', image: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80', desc: '2 пиццы, 2 бургера, картофель фри, 4 напитка и десерт.', ccal: '2500 ккал', configType: null },
+            { id: 53, name: 'Семейный Сет', price: 1200, category: 'Комбо', image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80', desc: '2 пиццы, 2 бургера, картофель фри, 4 напитка и десерт.', ccal: '2500 ккал', configType: null },
             { id: 54, name: 'Суши Сет на компанию', price: 1100, category: 'Комбо', image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80', desc: '6 видов роллов, 2 сета сашими и мисо-суп.', ccal: '1800 ккал', configType: null },
             { id: 55, name: 'Бургер-Сет', price: 750, category: 'Комбо', image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=600&q=80', desc: '3 мини-бургера, картофель фри, луковые кольца и соус.', ccal: '980 ккал', configType: null },
             { id: 56, name: 'Пицца-Сет', price: 890, category: 'Комбо', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80', desc: '2 пиццы (на выбор) + чесночный хлеб и 2 напитка.', ccal: '1650 ккал', configType: null },
@@ -151,97 +154,17 @@
         ];
 
         const PROMOTIONS = [
-    { 
-        id: 1000, 
-        badge: '🔥 Хит Дня', 
-        name: 'Гранд-Сет "Mega Mix"', 
-        oldPrice: 1650, 
-        price: 1190, 
-        image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80', 
-        desc: 'Пицца Пепперони + Бургер Шеф-Монстр + Большой картофель фри. Твой идеальный ужин!' 
-    },
-    { 
-        id: 1001, 
-        badge: '⚡ Суши Тайм', 
-        name: 'Сет "Филадельфия Сплэш"', 
-        oldPrice: 1240, 
-        price: 890, 
-        image: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=800&q=80', 
-        desc: 'Ролл Филадельфия Люкс + Запеченный ролл с креветкой по мега-скидке.' 
-    },
-    { 
-        id: 1002, 
-        badge: '🥐 Завтрак', 
-        name: 'Французское Утро', 
-        oldPrice: 390, 
-        price: 250, 
-        image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80', 
-        desc: 'Круассан + Сливки 20% к вашему кофе со скидкой!' 
-    },
-    { 
-        id: 1003, 
-        badge: '🍕 Пицца-День', 
-        name: '2 Пиццы по цене 1', 
-        oldPrice: 1200, 
-        price: 620, 
-        image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80', 
-        desc: 'Любые две пиццы из меню по цене одной! Экономия до 50%.' 
-    },
-    { 
-        id: 1004, 
-        badge: '🍔 Бургер-Мания', 
-        name: 'Бургер + Картошка + Напиток', 
-        oldPrice: 780, 
-        price: 490, 
-        image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80', 
-        desc: 'Полноценный обед: любой бургер, картофель фри XL и напиток за 490 ₽!' 
-    },
-    { 
-        id: 1005, 
-        badge: '🍣 Ролл-Сет', 
-        name: 'Сет из 6 роллов', 
-        oldPrice: 1800, 
-        price: 1290, 
-        image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80', 
-        desc: '6 разных роллов на выбор + васаби + имбирь + соевый соус.' 
-    },
-    { 
-        id: 1006, 
-        badge: '🥗 Для ЗОЖ', 
-        name: 'Здоровый Обед', 
-        oldPrice: 560, 
-        price: 370, 
-        image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80', 
-        desc: 'Салат + суп дня + фреш. Идеальный ланч для тех, кто следит за фигурой.' 
-    },
-    { 
-        id: 1007, 
-        badge: '🎄 Семейный', 
-        name: 'Семейный Ужин', 
-        oldPrice: 2500, 
-        price: 1790, 
-        image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80', 
-        desc: '2 пиццы, 2 бургера, картофель фри, 4 напитка и десерт для всей семьи.' 
-    },
-    { 
-        id: 1008, 
-        badge: '🌙 Ночной', 
-        name: 'Полуночный Сет', 
-        oldPrice: 890, 
-        price: 590, 
-        image: 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=800&q=80', 
-        desc: 'Крылья BBQ + картофель фри + сырные палочки + 2 соуса для вечернего киновечера.' 
-    },
-    { 
-        id: 1009, 
-        badge: '💎 VIP', 
-        name: 'Премиум Сет', 
-        oldPrice: 3200, 
-        price: 2490, 
-        image: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=800&q=80', 
-        desc: 'Трюфельный бургер, пицца 4 сыра, ролл Филадельфия, суп Том Ям и десерт.' 
-    }
-];
+            { id: 1000, badge: '🔥 Хит Дня', name: 'Гранд-Сет "Mega Mix"', oldPrice: 1650, price: 1190, image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80', desc: 'Пицца Пепперони + Бургер Шеф-Монстр + Большой картофель фри.' },
+            { id: 1001, badge: '⚡ Суши Тайм', name: 'Сет "Филадельфия Сплэш"', oldPrice: 1240, price: 890, image: 'https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=800&q=80', desc: 'Ролл Филадельфия Люкс + Запеченный ролл с креветкой по мега-скидке.' },
+            { id: 1002, badge: '🥐 Завтрак', name: 'Французское Утро', oldPrice: 390, price: 250, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80', desc: 'Круассан + Сливки 20% к вашему кофе со скидкой!' },
+            { id: 1003, badge: '🍕 Пицца-День', name: '2 Пиццы по цене 1', oldPrice: 1200, price: 620, image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80', desc: 'Любые две пиццы из меню по цене одной! Экономия до 50%.' },
+            { id: 1004, badge: '🍔 Бургер-Мания', name: 'Бургер + Картошка + Напиток', oldPrice: 780, price: 490, image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80', desc: 'Полноценный обед: любой бургер, картофель фри XL и напиток за 490 ₽!' },
+            { id: 1005, badge: '🍣 Ролл-Сет', name: 'Сет из 6 роллов', oldPrice: 1800, price: 1290, image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80', desc: '6 разных роллов на выбор + васаби + имбирь + соевый соус.' },
+            { id: 1006, badge: '🥗 Для ЗОЖ', name: 'Здоровый Обед', oldPrice: 560, price: 370, image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80', desc: 'Салат + суп дня + фреш. Идеальный ланч для тех, кто следит за фигурой.' },
+            { id: 1007, badge: '🎄 Семейный', name: 'Семейный Ужин', oldPrice: 2500, price: 1790, image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80', desc: '2 пиццы, 2 бургера, картофель фри, 4 напитка и десерт для всей семьи.' },
+            { id: 1008, badge: '🌙 Ночной', name: 'Полуночный Сет', oldPrice: 890, price: 590, image: 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=800&q=80', desc: 'Крылья BBQ + картофель фри + сырные палочки + 2 соуса для вечернего киновечера.' },
+            { id: 1009, badge: '💎 VIP', name: 'Премиум Сет', oldPrice: 3200, price: 2490, image: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=800&q=80', desc: 'Трюфельный бургер, пицца 4 сыра, ролл Филадельфия, суп Том Ям и десерт.' }
+        ];
 
         const CUSTOM_CONFIGS = {
             burgers: {
@@ -525,19 +448,31 @@
             return (
                 <div className="min-h-screen bg-gray-50 pb-20">
                     <header className="bg-gradient-to-r from-orange-500 to-orange-600 text-white sticky top-0 z-50 shadow-lg">
-                        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-                            <h1 onClick={function() { setActiveReceipt(null); }} className="text-2xl font-black tracking-tighter flex items-center gap-2 cursor-pointer">
+                        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center gap-4">
+                            <h1 onClick={function() { setActiveReceipt(null); }} className="text-2xl font-black tracking-tighter flex items-center gap-2 cursor-pointer shrink-0">
                                 <span className="bg-white p-2 rounded-xl shadow-inner flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-orange-600"><path d="M11.996 2.25a.75.75 0 0 1 .75.75v1.272a5.253 5.253 0 0 1 4.542 4.195 4.5 4.5 0 0 1 1.712 3.533c0 1.942-1.229 3.597-2.94 4.218l.04.482a2.25 2.25 0 0 1-2.242 2.437H10.14a2.25 2.25 0 0 1-2.242-2.437l.04-.482c-1.711-.62-2.94-2.276-2.94-4.218a4.5 4.5 0 0 1 1.712-3.533 5.253 5.253 0 0 1 4.532-4.194V3a.75.75 0 0 1 .755-.75ZM18 12a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3c0 .878.379 1.667 1 2.22A4.47 4.47 0 0 1 9.4 15h5.2c1.01 0 1.944-.336 2.7-1.12.338-.344.7-.72.7-1.66ZM9.398 16.5a5.955 5.955 0 0 0-1.558.83l-.04.482a.75.75 0 0 0 .747.813h6.906a.75.75 0 0 0 .747-.813l-.04-.482a5.955 5.955 0 0 0-1.558-.83H9.398Z" /></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-orange-600"><path d="M11.996 2.25a.75.75 0 0 1 .75.75v1.272a5.253 5.253 0 0 1 4.542 4.195 4.5 4.5 0 0 1 1.712 3.533c0 1.942-1.229 3.597-2.94 4.218l.04.482a2.25 2.25 0 0 1-2.242 2.437H10.14a2.25 2.25 0 0 1-2.242-2.437l.04-.482c-1.711-.62-2.94-2.276-2.94-4.218a4.5 4.5 0 0 1 1.712-3.533 5.253 5.253 0 0 1 4.532-4.194V3a.75.75 0 0 1 .755-.75ZM18 12a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3c0 .878.379 1.667 1 2.22A4.47 4.47 0 0 1 9.4 15h5.2c1.01 0 1.944-.336 2.7-1.12.338-.344.7-.72.7-1.66ZM9.398 16.5a5.955 5.955 0 0 0-1.558.83l-.04.482a.75.75 0 0 0 .747.813h6.906a.75.75 0 0 0 .747-.813l-.04-.482a5.955 5.955 0 0 0-1.558-.83H9.398Z"/></svg>
                                 </span>
                                 <span>CRUNCH.GO</span>
                             </h1>
-                            <div className="flex items-center gap-3">
-                                <a href="#cart" className="bg-white text-orange-600 font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-md hover:bg-orange-50 transition-all text-sm">
-                                    <span>Корзина</span>
-                                    {totalItems > 0 && <span className="bg-orange-600 text-white text-xs px-2 py-0.5 rounded-md">{totalItems}</span>}
-                                </a>
+                            
+                            <div className="flex items-center gap-3 flex-1 max-w-md">
+                                <div className="relative flex-1">
+                                    <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                    <input 
+                                        type="text" 
+                                        value={searchQuery} 
+                                        onChange={function(e) { setSearchQuery(e.target.value); }} 
+                                        placeholder="Поиск блюд..." 
+                                        className="w-full bg-white/20 backdrop-blur-sm text-white placeholder-white/70 border border-white/30 rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white/50"
+                                    />
+                                </div>
                             </div>
+                            
+                            <a href="#cart" className="bg-white text-orange-600 font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-md hover:bg-orange-50 transition-all text-sm shrink-0">
+                                <span>Корзина</span>
+                                {totalItems > 0 && <span className="bg-orange-600 text-white text-xs px-2 py-0.5 rounded-md">{totalItems}</span>}
+                            </a>
                         </div>
                     </header>
 
@@ -643,28 +578,13 @@
                                     </div>
                                 </div>
 
-                                {/* ПОИСК И КАТЕГОРИИ */}
-                                <div className="space-y-4">
-                                    <div className="flex gap-3">
-                                        <div className="flex-1 relative">
-                                            <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                                            <input 
-                                                type="text" 
-                                                value={searchQuery} 
-                                                onChange={function(e) { setSearchQuery(e.target.value); }} 
-                                                placeholder="🔍 Поиск блюд..." 
-                                                className="w-full bg-white border border-gray-200 rounded-2xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent shadow-sm"
-                                            />
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-none sticky top-[72px] bg-gray-50 py-2 z-40">
-                                        {categories.map(function(cat) {
-                                            return (
-                                                <button key={cat} onClick={function() { setActiveCategory(cat); }} className={'px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all cursor-pointer ' + (activeCategory === cat ? 'bg-orange-500 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200/60')}>{cat}</button>
-                                            );
-                                        })}
-                                    </div>
+                                {/* КАТЕГОРИИ */}
+                                <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-none sticky top-[72px] bg-gray-50 py-2 z-40">
+                                    {categories.map(function(cat) {
+                                        return (
+                                            <button key={cat} onClick={function() { setActiveCategory(cat); }} className={'px-5 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all cursor-pointer ' + (activeCategory === cat ? 'bg-orange-500 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200/60')}>{cat}</button>
+                                        );
+                                    })}
                                 </div>
 
                                 {/* РЕЗУЛЬТАТЫ ПОИСКА */}
