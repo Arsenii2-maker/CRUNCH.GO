@@ -8,12 +8,12 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- React 18 -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- React 17 (работает стабильнее с Babel) -->
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
     
-    <!-- Babel Standalone -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Babel Standalone 6 (старая версия, но стабильная) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
     
     <style>
         .scrollbar-none::-webkit-scrollbar { display: none; }
@@ -23,7 +23,7 @@
             to { transform: translateY(0); opacity: 1; }
         }
         .animate-receipt { animation: receiptIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .group-hover\:scale-102:hover { transform: scale(1.02); }
+        .group-hover\:scale-105:hover { transform: scale(1.05); }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans selection:bg-orange-500 selection:text-white">
