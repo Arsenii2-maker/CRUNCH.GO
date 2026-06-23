@@ -347,8 +347,8 @@
 };
 
             const categories = ['Все', 'Бургеры', 'Пицца', 'Суши', 'Супы', 'Закуски', 'Комбо', 'Продукты', 'Выпечка', 'Напитки'];
-            const filteredProducts = activeCategory === 'Все' ? PRODUCTS : PRODUCTS.filter(p => p.category === activeCategory);
-            const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProduct.configType] : { removable: [], addable: [] };
+const filteredProducts = activeCategory === 'Все' ? PRODUCTS : PRODUCTS.filter(p => p.category === activeCategory);
+const currentConfig = selectedProduct?.configType ? CUSTOM_CONFIGS[selectedProduct.configType] : { removable: [], addable: [] };
 
             return (
                 <div className="min-h-screen bg-gray-50 pb-20">
