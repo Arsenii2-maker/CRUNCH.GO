@@ -314,29 +314,37 @@
             };
 
             const downloadReceiptFile = () => {
-                if (!activeReceipt) return;
-                let text = `========================================\n   CRUNCH.GO RECEIPT\n========================================\n`;
-                text += `Кассовый чек №: ${activeReceipt.receiptNo}\nДата и время: ${activeReceipt.dateTime}\n----------------------------------------\n\n`;
-                activeReceipt.items.forEach((item, index) => {
-                    text += `${index + 1}. ${item.name} x ${item.count}\n`;
-                    if (item.removed?.length > 0) text += ` [Убрано]: ${item.removed.join(', ')}\n`;
-                    if (item.added?.length > 0) text += ` [Добавлено]: ${item.added.map(i => i.name).join(', ')}\n`;
-                    text += ` Цена: ${item.price * item.count} руб.\n\n`;
-                });
-                text += `----------------------------------------\nСумма позиций: ${activeReceipt.subTotal} руб.\n`;
-                if (activeReceipt.discount > 0) text += `Скидка (${activeReceipt.discount}%): -${activeReceipt.discountAmount} руб.\n`;
-                text += `Доставка: ${activeReceipt.deliveryPrice === 0 ? 'БЕСПЛАТНО' : activeReceipt.deliveryPrice + ' руб.'}\n`;
-                text += `========================================\nИТОГО К ОПЛАТЕ: ${activeReceipt.finalTotal} РУБ.\n========================================\n`;
+    if (!activeReceipt) return;
+    let text = `========================================\n   CRUNCH.GO RECEIPT\n========================================\n`;
+    text += `Кассовый чек №: ${activeReceipt.receiptNo}\nДата и время: ${activeReceipt.dateTime}\n----------------------------------------\n\n`;
+    
+    activeReceipt.items.forEach((item, index) => {
+        text += `${index + 1}. ${item.name} x ${item.count}\n`;
+        if (item.removed && item.removed.length > 0) {
+            text += ` [Убрано]: ${item.removed.join(', ')}\n`;
+        }
+        if (item.added && item.added.length > 0) {
+            text += ` [Добавлено]: ${item.added.map(i => i.name).join(', ')}\n`;
+        }
+        text += ` Цена: ${item.price * item.count} руб.\n\n`;
+    });
+    
+    text += `----------------------------------------\nСумма позиций: ${activeReceipt.subTotal} руб.\n`;
+    if (activeReceipt.discount > 0) {
+        text += `Скидка (${activeReceipt.discount}%): -${activeReceipt.discountAmount} руб.\n`;
+    }
+    text += `Доставка: ${activeReceipt.deliveryPrice === 0 ? 'БЕСПЛАТНО' : activeReceipt.deliveryPrice + ' руб.'}\n`;
+    text += `========================================\nИТОГО К ОПЛАТЕ: ${activeReceipt.finalTotal} РУБ.\n========================================\n`;
 
-                const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `CrunchGo_Receipt_${activeReceipt.receiptNo}.txt`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            };
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `CrunchGo_Receipt_${activeReceipt.receiptNo}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
 
             const categories = ['Все', 'Бургеры', 'Пицца', 'Суши', 'Супы', 'Закуски', 'Комбо', 'Продукты', 'Выпечка', 'Напитки'];
             const filteredProducts = activeCategory === 'Все' ? PRODUCTS : PRODUCTS.filter(p => p.category === activeCategory);
